@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수소충전소 정보</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .card-title {
+            color: #1a73e8;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+        .error {
+            background-color: #fff3f3;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .back-btn:hover {
+            background-color: #1557b0;
+        }
+        .station-details {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            display: none;
+        }
+        .detail-row {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        .detail-label {
+            font-weight: bold;
+            width: 120px;
+            flex-shrink: 0;
+        }
+        .detail-value {
+            flex-grow: 1;
+        }
+        .toggle-details {
+            background-color: #e7f1ff;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #1a73e8;
+        }
+        .toggle-details:hover {
+            background-color: #d0e3ff;
+        }
+        .map-container {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>수소충전소 정보</h1>
+        </header>
+        
+        <div class="card">
+            <h2 class="card-title">수소 가격 추이</h2>
+            <div class="chart-container">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">수소충전소 지도</h2>
+            <div id="map" class="map-container">
+                <div class="loading">지도를 불러오는 중입니다...</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">수소충전소 목록</h2>
+            <div id="stationList">
+                <div class="loading">데이터를 불러오는 중입니다...</div>
+            </div>
+        </div>
+        
+        <a href="/" class="back-btn">메인 페이지로 돌아가기</a>
+    </div>
+
+    <script>
+        // 페이지 로드 시 데이터 가져오기
+        document.addEventListener('DOMContentLoaded', fetchHydrogenStationData);
+        
+        // 수소충전소 데이터 가져오기
+        async function fetchHydrogenStationData() {
+            try {
+                const response = await fetch('/hydrogen-stations/data');
+                if (!response.ok) {
+                    throw new Error('데이터를 불러오는데 실패했습니다.');
+                }
+                
+                const data = await response.json();
+                
+                // 데이터 표시
+                displayStationList(data.stations);
+                displayPriceChart(data.price_data);
+                initMap(data.stations);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('stationList').innerHTML = `
+                    <div class="error">
+                        <p>${error.message}</p>
+                        <p>잠시 후 다시 시도해주세요.</p>
+                    </div>
+                `;
+                document.getElementById('map').innerHTML = `
+                    <div class="error">
+                        <p>지도를 불러오는데 실패했습니다.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 충전소 목록 표시
+        function displayStationList(stations) {
+            if (!stations || stations.length === 0) {
+                document.getElementById('stationList').innerHTML = '<p>표시할 충전소 정보가 없습니다.</p>';
+                return;
+            }
+            
+            let tableHtml = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>충전소명</th>
+                            <th>주소</th>
+                            <th>가격</th>
+                            <th>상태</th>
+                            <th>운영사</th>
+                            <th>상세정보</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            stations.forEach((station, index) => {
+                tableHtml += `
+                    <tr>
+                        <td>${station.name}</td>
+                        <td>${station.address}</td>
+                        <td>${station.price}</td>
+                        <td>${station.status}</td>
+                        <td>${station.company}</td>
+                        <td>
+                            <button class="toggle-details" onclick="toggleDetails(${index})">상세정보</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="station-details" id="details-${index}">
+                            <div class="detail-row">
+                                <div class="detail-label">운영시간:</div>
+                                <div class="detail-value">${station.operation_time}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">연락처:</div>
+                                <div class="detail-value">${station.phone}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">용량:</div>
+                                <div class="detail-value">${station.capacity}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">압력:</div>
+                                <div class="detail-value">${station.pressure}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">업데이트:</div>
+                                <div class="detail-value">${station.update_date}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">좌표:</div>
+                                <div class="detail-value">위도 ${station.latitude}, 경도 ${station.longitude}</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('stationList').innerHTML = tableHtml;
+        }
+        
+        // 상세정보 토글
+        function toggleDetails(index) {
+            const detailsElement = document.getElementById(`details-${index}`);
+            if (detailsElement.style.display === 'block') {
+                detailsElement.style.display = 'none';
+            } else {
+                detailsElement.style.display = 'block';
+            }
+        }
+        
+        // 가격 차트 표시
+        function displayPriceChart(priceData) {
+            if (!priceData || !priceData.labels || !priceData.data) {
+                return;
+            }
+            
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: priceData.labels,
+                    datasets: [{
+                        label: '수소 가격 (원/kg)',
+                        data: priceData.data,
+                        backgroundColor: 'rgba(26, 115, 232, 0.2)',
+                        borderColor: 'rgba(26, 115, 232, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(26, 115, 232, 1)',
+                        pointRadius: 4,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: '가격 (원/kg)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '월'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y.toLocaleString()}원/kg`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 지도 초기화
+        function initMap(stations) {
+            // 지도를 표시할 div
+            const mapDiv = document.getElementById('map');
+            
+            // 카카오맵 API가 로드되었는지 확인
+            if (typeof kakao !== 'undefined' && kakao.maps) {
+                createKakaoMap(mapDiv, stations);
+            } else {
+                // 카카오맵 API 로드
+                const script = document.createElement('script');
+                script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_MAP_API_KEY&autoload=false';
+                script.onload = function() {
+                    kakao.maps.load(function() {
+                        createKakaoMap(mapDiv, stations);
+                    });
+                };
+                document.head.appendChild(script);
+                
+                // API 키가 없는 경우 메시지 표시
+                mapDiv.innerHTML = `
+                    <div style="padding: 20px; text-align: center;">
+                        <p>지도를 표시하려면 카카오맵 API 키가 필요합니다.</p>
+                        <p>카카오 개발자 사이트에서 API 키를 발급받아 적용해주세요.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 카카오맵 생성
+        function createKakaoMap(mapDiv, stations) {
+            // 좌표가 있는 충전소만 필터링
+            const validStations = stations.filter(station => 
+                station.latitude && station.longitude && 
+                !isNaN(parseFloat(station.latitude)) && 
+                !isNaN(parseFloat(station.longitude))
+            );
+            
+            if (validStations.length === 0) {
+                mapDiv.innerHTML = '<p>지도에 표시할 충전소 좌표 정보가 없습니다.</p>';
+                return;
+            }
+            
+            // 지도 생성
+            const map = new kakao.maps.Map(mapDiv, {
+                center: new kakao.maps.LatLng(
+                    parseFloat(validStations[0].latitude), 
+                    parseFloat(validStations[0].longitude)
+                ),
+                level: 7
+            });
+            
+            // 마커 생성
+            validStations.forEach(station => {
+                const marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(
+                        parseFloat(station.latitude), 
+                        parseFloat(station.longitude)
+                    ),
+                    map: map
+                });
+                
+                // 인포윈도우 생성
+                const infoContent = `
+                    <div style="padding:5px;width:200px;text-align:center;">
+                        <strong>${station.name}</strong><br>
+                        ${station.price}<br>
+                        <small>${station.status}</small>
+                    </div>
+                `;
+                
+                const infowindow = new kakao.maps.InfoWindow({
+                    content: infoContent
+                });
+                
+                // 마커 클릭 시 인포윈도우 표시
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    infowindow.open(map, marker);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
