@@ -1,8 +1,8 @@
 # TestFastApi Backend Project
 
-이 프로젝트는 FastAPI를 백엔드로 사용하여 PostgreSQL과 연동하여 테스트 하기 위해 생성한 프로젝트 입니다.
-이 프로젝트는 Windsurf AI를 사용하여 생성되었습니다.
-이 프로젝트는 Claude 3.5와 Claude 3.7를 사용하여 코딩하였습니다.
+- 이 프로젝트는 FastAPI를 백엔드로 사용하여 PostgreSQL과 연동하여 테스트 하기 위해 생성한 프로젝트 입니다.
+- 이 프로젝트는 Windsurf AI를 사용하여 생성되었습니다.
+- 이 프로젝트는 Claude 3.5와 Claude 3.7를 사용하여 코딩하였습니다.
 
 ## Setup
 
@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ```
 
 2. .env 파일에 관한 내용입니다:
-데이터베이스 접속 정보, JWT 설정 정보, Google OAuth 정보, 기타 사용중인 API 정보는 `.env` file에 작성합니다.
+- 데이터베이스 접속 정보, JWT 설정 정보, Google OAuth 정보, 기타 사용중인 API 정보는 `.env` file에 작성합니다.
 ```
 DB_HOST=localhost
 DB_NAME=postgres
