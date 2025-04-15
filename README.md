@@ -1,8 +1,6 @@
 # TestFastApi Backend Project
 
 - 이 프로젝트는 FastAPI를 백엔드로 사용하여 PostgreSQL과 연동하여 테스트 하기 위해 생성한 프로젝트 입니다.
-- 이 프로젝트는 Windsurf AI를 사용하여 생성되었습니다.
-- 이 프로젝트는 Claude 3.5와 Claude 3.7를 사용하여 코딩하였습니다.
 
 ## Setup
 
@@ -55,3 +53,12 @@ uvicorn main:app --reload
 - `middleware/`: 사용자 정의 미들웨어
 - `templates/`: Jinja2 템플릿
 - `static/`: 정적 파일
+
+
+## Windsurf AI
+- 이 프로젝트는 Windsurf AI 툴을 사용하여 생성하였습니다.
+- 이 프로젝트는 Claude 3.5와 Claude 3.7를 사용하여 코딩하였습니다.
+- 생성된 코드에서 수정이 필요한 부분에 직접 코딩하였습니다.
+
+## License
+
