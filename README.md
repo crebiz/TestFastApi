@@ -1,16 +1,35 @@
-# TestFastApi Backend Project
+# TestFastApi 프로젝트
 
-- 이 프로젝트는 FastAPI를 백엔드로 사용하여 PostgreSQL과 연동하여 테스트 하기 위해 생성한 프로젝트 입니다.
+이 프로젝트는 FastAPI 백엔드와 React + TypeScript 프론트엔드로 구성된 웹 애플리케이션입니다.
 
-## Setup
+## 프로젝트 구조
 
-1. Install dependencies:
+- `backend/`: FastAPI 백엔드 코드
+  - `controller/`: API 라우트 핸들러
+  - `database/`: 데이터베이스 설정 및 연결 관리
+  - `model/`: SQLAlchemy 모델
+  - `schemas/`: 요청/응답 검증을 위한 Pydantic 스키마
+  - `service/`: 비즈니스 로직
+  - `middleware/`: 사용자 정의 미들웨어
+  - `main.py`: FastAPI 애플리케이션의 진입점
+
+- `frontend/`: React + TypeScript 프론트엔드 코드
+  - `src/`: 소스 코드
+    - `components/`: React 컴포넌트
+    - `stores/`: MobX 상태 관리 스토어
+    - `services/`: API 통신 서비스
+    - `types/`: TypeScript 타입 정의
+
+## 백엔드 설정
+
+1. 의존성 설치:
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 
-2. .env 파일에 관한 내용입니다:
-- 데이터베이스 접속 정보, JWT 설정 정보, Google OAuth 정보, 기타 사용중인 API 정보는 `.env` file에 작성합니다.
+2. .env 파일 설정:
+- 데이터베이스 접속 정보, JWT 설정 정보, Google OAuth 정보, 기타 사용중인 API 정보는 `backend/.env` 파일에 작성합니다.
 ```
 DB_HOST=localhost
 DB_NAME=postgres
@@ -30,30 +49,46 @@ GOOGLE_CLIENT_SECRET="your_client_secret"
 # Add any other required environment variables
 ```
 
-3. 데이터베이스 테이블 생성을 위해서는 `init_database.py`를 실행합니다.
-
-4. server 실행하는 방법법:
+3. 데이터베이스 테이블 생성:
 ```bash
-uvicorn main:app --reload
+cd backend
+python init_database.py
 ```
 
-5. API 문서를 확인하는 방법:
+4. 백엔드 서버 실행:
+```bash
+python main.py
+```
+
+5. API 문서 확인:
 - http://localhost:8000/docs
 - http://localhost:8000/redoc
 
+## 프론트엔드 설정
 
-## Project 구조
+1. 의존성 설치:
+```bash
+cd frontend
+npm install
+```
 
-- `main.py`: FastAPI 애플리케이션의 진입점
-- `database/`: 데이터베이스 설정 및 연결 관리
-- `model/`: SQLAlchemy 모델
-- `schemas/`: 요청/응답 검증을 위한 Pydantic 스키마
-- `controller/`: API 라우트 핸들러
-- `service/`: 비즈니스 로직
-- `middleware/`: 사용자 정의 미들웨어
-- `templates/`: Jinja2 템플릿
-- `static/`: 정적 파일
+2. 개발 서버 실행:
+```bash
+cd frontend
+npm start
+```
 
+3. 프론트엔드 빌드:
+```bash
+cd frontend
+npm run build
+```
+
+## 기술 스택
+
+- 백엔드: FastAPI, SQLAlchemy, PostgreSQL
+- 프론트엔드: React, TypeScript, MobX
+- 인증: JWT
 
 ## Windsurf AI
 - 이 프로젝트는 Windsurf AI 툴을 사용하여 생성하였습니다.
@@ -61,4 +96,3 @@ uvicorn main:app --reload
 - 생성된 코드에서 수정이 필요한 부분에 직접 코딩하였습니다.
 
 ## License
-
