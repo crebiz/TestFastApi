@@ -13,6 +13,36 @@ from backend.service.token_service import TokenService
 from backend.schemas.user import User, UserCreate, UserUpdate
 from backend.schemas.login_info import LoginInfoCreate, LoginInfo
 from backend.middleware.auth import jwt_bearer
+import os
+import logging
+import logging.handlers
+
+# 로깅 설정
+log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'logs')
+os.makedirs(log_dir, exist_ok=True)
+
+logger = logging.getLogger('user_controller')
+logger.setLevel(logging.INFO)
+
+# 파일 핸들러 설정
+log_file = os.path.join(log_dir, 'user_controller.log')
+file_handler = logging.handlers.RotatingFileHandler(
+    log_file, maxBytes=10*1024*1024, backupCount=5, encoding='utf-8'
+)
+file_handler.setLevel(logging.INFO)
+
+# 포맷 설정
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# 콘솔 핸들러 추가
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(formatter)
+
+# 핸들러 추가
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 # API 라우터 설정
 router = APIRouter(
@@ -116,18 +146,19 @@ async def google_login(user_data: Dict, db: Session = Depends(get_db)):
     Returns:
         Dict: 사용자 정보와 JWT 토큰
     """
-    print("Received user_data:", user_data)  # 디버깅 로그 추가
+    logger.info(f"Received user_data: {user_data}")  # 디버깅 로그 추가
     
     user = UserCreate(
         username=user_data["name"],
-        email=user_data["email"]
+        email=user_data["email"],
+        imageUrl=user_data["imageUrl"]
     )
     
     # 기존 사용자 확인
     existing_user = UserService.get_user_by_email(db=db, email=user.email)
     
     if existing_user:
-        print("Found existing user:", existing_user)  # 디버깅 로그 추가
+        logger.info(f"Found existing user: {existing_user}")  # 디버깅 로그 추가
         # 로그인 기록 저장
         login_info = LoginInfoCreate(user_id=existing_user.id, action_type="login")
         LoginInfoService.create_login_info(db=db, login_info=login_info)
@@ -138,16 +169,17 @@ async def google_login(user_data: Dict, db: Session = Depends(get_db)):
             "user": {
                 "id": existing_user.id,
                 "email": existing_user.email,
-                "username": existing_user.username
+                "username": existing_user.username,
+                "imageUrl": existing_user.imageUrl
             },
             "tokens": tokens
         }
-        print("Response for existing user:", response)  # 디버깅 로그 추가
+        logger.info(f"Response for existing user: {response}")  # 디버깅 로그 추가
         return response
     
     # 새 사용자 생성
     new_user = UserService.create_user(db=db, user=user)
-    print("Created new user:", new_user)  # 디버깅 로그 추가
+    logger.info(f"Creating new user... {new_user}")  # 디버깅 로그 추가
     
     # 로그인 기록 저장
     login_info = LoginInfoCreate(user_id=new_user.id, action_type="login")
@@ -159,11 +191,12 @@ async def google_login(user_data: Dict, db: Session = Depends(get_db)):
         "user": {
             "id": new_user.id,
             "email": new_user.email,
-            "username": new_user.username
+            "username": new_user.username,
+            "imageUrl": new_user.imageUrl
         },
         "tokens": tokens
     }
-    print("Response for new user:", response)  # 디버깅 로그 추가
+    logger.info(f"Response for new user: {response}")  # 디버깅 로그 추가
     return response
 
 @router.post("/refresh-token")

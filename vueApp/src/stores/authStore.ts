@@ -3,7 +3,7 @@ import axios from 'axios'
 
 interface User {
   id: number
-  name: string
+  username: string
   email: string
   imageUrl: string
 }
@@ -28,8 +28,8 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async fetchGoogleClientId() {
       try {
-        const response = await axios.get('http://localhost:8000/auth/google-client-id')
-        return response.data.client_id
+        const response = await axios.get('http://localhost:8000/api/config')
+        return response.data.GOOGLE_CLIENT_ID
       } catch (error) {
         console.error('Google Client ID 가져오기 실패:', error)
         throw error
