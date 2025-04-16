@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from backend.controller.user_controller import router as user_router
 from backend.controller.category_controller import router as category_router
 from backend.controller.hydrogen_controller import router as hydrogen_router
+from backend.controller.fund_controller import router as fund_router
 from backend.database.database import engine, Base
 
 # 환경 변수 로드
@@ -35,6 +36,7 @@ app.add_middleware(
 app.include_router(user_router)
 app.include_router(category_router)
 app.include_router(hydrogen_router)
+app.include_router(fund_router)
 
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)

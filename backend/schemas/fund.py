@@ -7,6 +7,7 @@ class FundBase(BaseModel):
     type: str
     account_num: str
     fund_nm: str
+    state: str
 
 class FundCreate(FundBase):
     pass
@@ -15,6 +16,8 @@ class FundUpdate(BaseModel):
     financial_comp: Optional[str] = None
     type: Optional[str] = None
     account_num: Optional[str] = None
+    fund_nm: Optional[str] = None
+    state: Optional[str] = None
 
 class Fund(FundBase):
     id: str

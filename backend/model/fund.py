@@ -24,6 +24,7 @@ class Fund(Base):
         type (str): 펀드 종류(개인연금/퇴직연금/투자펀드)
         account_num (str): 계좌번호
         fund_nm (str): 펀드명
+        state (str): 펀드상태태
         created_at (str): 계정 생성 시간 ('yyyymmddhhmmss' 형식)
         updated_at (str): 정보 수정 시간 ('yyyymmddhhmmss' 형식)
     """
@@ -35,6 +36,7 @@ class Fund(Base):
     type = Column(String, unique=False, index=True)  # 펀드 종류
     account_num = Column(String, unique=False, index=True)  # 계좌번호
     fund_nm = Column(String, unique=False, index=True)  # 펀드명
+    state = Column(String, unique=False, index=True)  # 펀드상태
     created_at = Column(String, default=get_current_time)  # 생성 시간
     updated_at = Column(String, default=get_current_time, onupdate=get_current_time)  # 수정 시간
 
@@ -43,10 +45,10 @@ class Fund(Base):
 def generate_fund_id(context):
     """F001, F002 형식의 펀드 ID를 자동 생성"""
     # 현재 세션 가져오기
-    session = context.get_bind().connect()
+    connection = context['get_bind']()
     
     # 마지막 펀드 ID 조회
-    result = session.execute(select(Fund.id).order_by(Fund.id.desc()).limit(1)).scalar()
+    result = connection.execute(select(Fund.id).order_by(Fund.id.desc()).limit(1)).scalar()
     
     if result:
         # 기존 ID에서 숫자 부분 추출 후 증가
