@@ -1,6 +1,6 @@
 # TestFastApi 프로젝트
 
-이 프로젝트는 FastAPI 백엔드와 React + TypeScript 프론트엔드로 구성된 웹 애플리케이션입니다.
+이 프로젝트는 FastAPI 백엔드와 세 가지 다른 프론트엔드 기술로 구성된 멀티 플랫폼 애플리케이션입니다.
 
 ## 프로젝트 구조
 
@@ -13,12 +13,25 @@
   - `middleware/`: 사용자 정의 미들웨어
   - `main.py`: FastAPI 애플리케이션의 진입점
 
-- `frontend/`: React + TypeScript 프론트엔드 코드
+- `reactApp/`: React + TypeScript 웹 프론트엔드
   - `src/`: 소스 코드
     - `components/`: React 컴포넌트
     - `stores/`: MobX 상태 관리 스토어
     - `services/`: API 통신 서비스
     - `types/`: TypeScript 타입 정의
+
+- `vueApp/`: Vue.js + TypeScript 웹 프론트엔드
+  - `src/`: 소스 코드
+    - `views/`: Vue 컴포넌트 뷰
+    - `stores/`: Pinia 상태 관리 스토어
+    - `router/`: Vue Router 설정
+
+- `flutterApp/`: Flutter 모바일 앱
+  - `lib/`: 소스 코드
+    - `screens/`: 앱 화면 위젯
+    - `services/`: API 통신 서비스
+    - `models/`: 데이터 모델
+    - `providers/`: Riverpod 상태 관리
 
 ## 백엔드 설정
 
@@ -66,29 +79,76 @@ python main.py
 
 ## 프론트엔드 설정
 
+### React 프론트엔드
+
 1. 의존성 설치:
 ```bash
-cd frontend
+cd reactApp
 npm install
 ```
 
 2. 개발 서버 실행:
 ```bash
-cd frontend
+cd reactApp
 npm start
 ```
 
 3. 프론트엔드 빌드:
 ```bash
-cd frontend
+cd reactApp
 npm run build
+```
+
+### Vue.js 프론트엔드
+
+1. 의존성 설치:
+```bash
+cd vueApp
+npm install
+```
+
+2. 개발 서버 실행:
+```bash
+cd vueApp
+npm run serve
+```
+
+3. 프론트엔드 빌드:
+```bash
+cd vueApp
+npm run build
+```
+
+### Flutter 모바일 앱
+
+1. 의존성 설치:
+```bash
+cd flutterApp
+flutter pub get
+```
+
+2. 앱 실행:
+```bash
+cd flutterApp
+flutter run
+```
+
+3. 앱 빌드:
+```bash
+cd flutterApp
+flutter build apk  # Android 앱 빌드
+flutter build ios  # iOS 앱 빌드 (macOS 필요)
 ```
 
 ## 기술 스택
 
 - 백엔드: FastAPI, SQLAlchemy, PostgreSQL
-- 프론트엔드: React, TypeScript, MobX
-- 인증: JWT
+- 웹 프론트엔드: 
+  - React, TypeScript, MobX
+  - Vue.js, TypeScript, Pinia
+- 모바일 앱: Flutter, Dart, Riverpod
+- 인증: JWT, Google OAuth
+- 공통 기능: 구글 로그인
 
 ## Windsurf AI
 - 이 프로젝트는 Windsurf AI 툴을 사용하여 생성하였습니다.
