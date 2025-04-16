@@ -17,7 +17,7 @@ class FundUpdate(BaseModel):
     account_num: Optional[str] = None
 
 class Fund(FundBase):
-    id: int
+    id: str
     created_at: str
     updated_at: str
 
