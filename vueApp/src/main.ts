@@ -17,17 +17,28 @@ const vuetify = createVuetify({
   directives,
   theme: {
     defaultTheme: 'light',
+    // Material Design 3 적용
+    variations: {
+      colors: ['primary', 'secondary'],
+      lighten: 5,
+      darken: 5,
+    },
     themes: {
       light: {
         dark: false,
         colors: {
-          primary: '#4CAF50',
-          secondary: '#9C27B0',
-          accent: '#9C27B0',
-          error: '#F44336',
-          warning: '#FF9800',
-          info: '#00CAE3',
-          success: '#4CAF50'
+          primary: '#009688',    // Teal
+          secondary: '#CDDC39',  // Lime
+          accent: '#CDDC39',     // Lime
+          error: '#F44336',      // Red
+          warning: '#FF9800',    // Orange
+          info: '#2196F3',       // Blue
+          success: '#4CAF50',    // Green
+          'dark-primary': '#00796B',  // Dark Teal
+          'light-primary': '#B2DFDB', // Light Teal
+          'text-primary': '#FFFFFF',  // White
+          'text-secondary': '#FFFFFF', // White
+          'divider': '#BDBDBD'        // Light Grey
         }
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <Sidebar v-model:drawer="drawer" />
     <AppBar :title="currentRouteName" @toggle-drawer="drawer = !drawer" />
+    <Sidebar v-model:drawer="drawer" />
     
     <v-main>
       <v-container fluid>
@@ -48,6 +48,18 @@ export default defineComponent({
 
 <style scoped>
 .v-main {
-  background-color: #f5f5f5;
+  background-color: #E0F2F1; /* Light Teal 배경색 */
+  padding-top: 64px !important; /* AppBar 높이와 동일하게 설정 */
+}
+
+.v-container {
+  padding: 16px;
+  max-width: 1440px;
+}
+
+/* Material Design 3 스타일 */
+.v-card {
+  border-radius: 16px !important;
+  overflow: hidden;
 }
 </style>

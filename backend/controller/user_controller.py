@@ -148,10 +148,12 @@ async def google_login(user_data: Dict, db: Session = Depends(get_db)):
     """
     logger.info(f"Received user_data: {user_data}")  # 디버깅 로그 추가
     
+    # imageUrl은 임시 변수로 저장하고 UserCreate에는 포함하지 않음
+    image_url = user_data.get("imageUrl", "")
+    
     user = UserCreate(
         username=user_data["name"],
-        email=user_data["email"],
-        imageUrl=user_data["imageUrl"]
+        email=user_data["email"]
     )
     
     # 기존 사용자 확인
@@ -165,12 +167,13 @@ async def google_login(user_data: Dict, db: Session = Depends(get_db)):
         
         # JWT 토큰 생성
         tokens = TokenService.create_tokens_for_user(db, existing_user.id)
+        # 응답 데이터에 imageUrl 필드 추가 (모델에는 없음)
         response = {
             "user": {
                 "id": existing_user.id,
                 "email": existing_user.email,
                 "username": existing_user.username,
-                "imageUrl": existing_user.imageUrl
+                "imageUrl": image_url  # 저장해둔 이미지 URL 사용
             },
             "tokens": tokens
         }
@@ -187,12 +190,13 @@ async def google_login(user_data: Dict, db: Session = Depends(get_db)):
     
     # JWT 토큰 생성
     tokens = TokenService.create_tokens_for_user(db, new_user.id)
+    # 새 사용자 응답에도 imageUrl 필드 추가
     response = {
         "user": {
             "id": new_user.id,
             "email": new_user.email,
             "username": new_user.username,
-            "imageUrl": new_user.imageUrl
+            "imageUrl": image_url  # 저장해둔 이미지 URL 사용
         },
         "tokens": tokens
     }
