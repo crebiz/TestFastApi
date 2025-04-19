@@ -37,6 +37,8 @@ class Fund(Base):
     account_num = Column(String, unique=False, index=True)  # 계좌번호
     fund_nm = Column(String, unique=False, index=True)  # 펀드명
     state = Column(String, unique=False, index=True)  # 펀드상태
+    invest_type = Column(String, nullable=True, index=True)  # 투자유형
+    note = Column(String, nullable=True, index=True)  # 참고사항
     created_at = Column(String, default=get_current_time)  # 생성 시간
     updated_at = Column(String, default=get_current_time, onupdate=get_current_time)  # 수정 시간
 

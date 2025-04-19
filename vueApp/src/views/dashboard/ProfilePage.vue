@@ -1,28 +1,25 @@
 <template>
   <div>
-    <v-row>
+    <v-row justify="center">
       <v-col cols="12" md="4">
-        <v-card class="h-100" elevation="3" rounded="lg">
-          <v-card-text class="text-center">
+        <v-card class="h-100 mx-auto d-flex flex-column justify-center" elevation="3" rounded="lg">
+          <v-card-text class="text-center d-flex flex-column align-center py-8">
             <v-avatar size="150" class="mb-4" color="primary">
-              <v-img
-                :src="userAvatar"
-                alt="User"
-              ></v-img>
+              <v-img :src="userAvatar" alt="User"></v-img>
             </v-avatar>
             <h2 class="text-h5 mb-1">{{ userName }}</h2>
             <p class="text-subtitle-1 text-grey">{{ userEmail }}</p>
-            <v-divider class="my-4"></v-divider>
+            <v-divider class="my-4 w-100"></v-divider>
           </v-card-text>
         </v-card>
       </v-col>
-      
+
       <v-col cols="12" md="8">
         <v-card class="h-100" elevation="3" rounded="lg">
-          <v-card-title class="text-primary">
-            <v-icon left color="secondary">mdi-information</v-icon>
-            계정 정보
-          </v-card-title>
+          <v-toolbar flat color="primary" dark class="rounded-t-lg pa-3">
+            <v-icon class="mr-2 ml-2">mdi-information</v-icon>
+            <v-toolbar-title class="text-h6 font-weight-medium">계정 정보</v-toolbar-title>
+          </v-toolbar>
           <v-card-text>
             <div class="info-grid">
               <div class="info-item">
@@ -34,7 +31,7 @@
                   <div class="info-value">{{ userId }}</div>
                 </div>
               </div>
-              
+
               <div class="info-item">
                 <div class="info-icon">
                   <v-icon color="primary">mdi-google</v-icon>
@@ -44,7 +41,7 @@
                   <div class="info-value">{{ userEmail }}</div>
                 </div>
               </div>
-              
+
               <div class="info-item">
                 <div class="info-icon">
                   <v-icon color="primary">mdi-calendar</v-icon>
@@ -54,7 +51,7 @@
                   <div class="info-value">{{ joinDate }}</div>
                 </div>
               </div>
-              
+
               <div class="info-item">
                 <div class="info-icon">
                   <v-icon color="primary">mdi-clock</v-icon>
@@ -64,7 +61,7 @@
                   <div class="info-value">{{ lastLogin }}</div>
                 </div>
               </div>
-              
+
               <div class="info-item">
                 <div class="info-icon">
                   <v-icon color="primary">mdi-shield</v-icon>
@@ -90,10 +87,10 @@ import { useAuthStore } from '@/stores/authStore';
 
 export default defineComponent({
   name: 'ProfilePage',
-  
+
   setup() {
     const authStore = useAuthStore();
-    
+
     // 사용자 정보
     const userId = ref(authStore.user?.email.split('@')[0] || 1);
     const userName = ref(authStore.user?.username || '사용자');
@@ -101,13 +98,13 @@ export default defineComponent({
     const userAvatar = computed(() => {
       return authStore.user?.imageUrl || 'https://via.placeholder.com/150?text=User';
     });
-    
+
     // 계정 정보
     const joinDate = ref('2025-01-15');
     const lastLogin = ref('2025-04-16 15:30:45');
-    
+
     // 로그인 및 토큰 관련 코드 제거
-    
+
     return {
       userId,
       userName,
