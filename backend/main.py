@@ -11,7 +11,8 @@ from backend.controller.user_controller import router as user_router
 from backend.controller.category_controller import router as category_router
 from backend.controller.hydrogen_controller import router as hydrogen_router
 from backend.controller.fund_controller import router as fund_router
-from backend.controller.kftc_controller import router as kftc_router
+# from backend.controller.kftc_controller import router as kftc_router  # 임시 비활성화
+from backend.controller.code_controller import router as code_router
 from backend.database.database import engine, Base
 
 # 환경 변수 로드
@@ -38,7 +39,8 @@ app.include_router(user_router)
 app.include_router(category_router)
 app.include_router(hydrogen_router)
 app.include_router(fund_router)
-app.include_router(kftc_router)
+# app.include_router(kftc_router)  # 임시 비활성화
+app.include_router(code_router)
 
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)

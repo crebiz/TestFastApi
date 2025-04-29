@@ -429,6 +429,7 @@ import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 import { Doughnut } from 'vue-chartjs';
+import { getApiUrl } from '@/config/api';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
@@ -512,7 +513,7 @@ export default defineComponent({
       error.value = null;
 
       try {
-        const response = await axios.get(`http://localhost:8000/funds/?type=${type}`);
+        const response = await axios.get(getApiUrl(`/funds/?type=${type}`));
         // 데이터를 가져온 후 정렬 함수 적용
         funds.value = sortFunds(response.data);
 
@@ -531,7 +532,7 @@ export default defineComponent({
       error.value = null;
 
       try {
-        const response = await axios.get('http://localhost:8000/funds/total');
+        const response = await axios.get(getApiUrl('/funds/total'));
         console.log(response.data);
         totalFunds.value = response.data.length;
       } catch (err) {
@@ -841,7 +842,7 @@ export default defineComponent({
       isChartLoading.value = true;
       try {
         // 전체 펀드 데이터 가져오기
-        const response = await axios.get('http://localhost:8000/funds/');
+        const response = await axios.get(getApiUrl('/funds/'));
         const allFunds = response.data;
 
         // 투자유형별 분포 계산

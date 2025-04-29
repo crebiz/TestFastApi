@@ -1,17 +1,7 @@
 <template>
-  <v-navigation-drawer 
-    :model-value="drawer" 
-    @update:model-value="$emit('update:drawer', $event)"
-    :mini-variant="miniVariant" 
-    :clipped="false" 
-    app 
-    color="primary" 
-    dark
-    class="sidebar-aligned"
-    floating
-    elevation="3"
-    rounded="lg"
-  >
+  <v-navigation-drawer :model-value="drawer" @update:model-value="$emit('update:drawer', $event)"
+    :mini-variant="miniVariant" :clipped="false" app color="primary" dark class="sidebar-aligned" floating elevation="3"
+    rounded="lg">
     <v-list-item class="px-2">
       <v-list-item-avatar>
         <v-img src="https://via.placeholder.com/50?text=CC" alt="Crebiz Community"></v-img>
@@ -61,6 +51,7 @@ export default defineComponent({
       { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard' },
       { title: 'Login Info', icon: 'mdi-account', to: '/dashboard/profile' },
       { title: 'Fund', icon: 'mdi-cash-multiple', to: '/dashboard/fund' },
+      { title: 'Code', icon: 'mdi-code-brackets', to: '/dashboard/code' }
     ];
 
     return {
@@ -85,11 +76,14 @@ export default defineComponent({
 
 /* AppBar와 높이 맞추기 */
 .v-navigation-drawer {
-  top: 64px !important; /* 기본 AppBar 높이 */
+  top: 64px !important;
+  /* 기본 AppBar 높이 */
   max-height: calc(100% - 64px) !important;
   height: calc(100% - 64px) !important;
-  z-index: 1; /* AppBar보다 낮은 z-index */
-  border-radius: 0 16px 0 0 !important; /* Material Design 3 스타일 */
+  z-index: 1;
+  /* AppBar보다 낮은 z-index */
+  border-radius: 0 16px 0 0 !important;
+  /* Material Design 3 스타일 */
   margin-top: 4px;
 }
 </style>

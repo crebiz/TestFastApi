@@ -4,6 +4,8 @@ import DashboardLayout from '../layouts/DashboardLayout.vue'
 import DashboardPage from '../views/dashboard/DashboardPage.vue'
 import ProfilePage from '../views/dashboard/ProfilePage.vue'
 import FundPage from '../views/dashboard/FundPage.vue'
+import CodePage from '../views/code/CodePage.vue'
+
 
 // 스토어 가져오기
 import { useAuthStore } from '../stores/authStore'
@@ -33,8 +35,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'fund',
         name: 'fund',
         component: FundPage
-      }
-    ]
+      },
+      {
+        path: 'code',
+        name: 'code',
+        component: CodePage
+      }    ]
   }
 ]
 

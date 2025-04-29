@@ -3,16 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, event, select, func
 from sqlalchemy.ext.declarative import declared_attr
 from backend.database.database import Base, engine
-
-
-def get_current_time():
-    """
-    현재 시간을 'yyyymmddhhmmss' 형식의 문자열로 반환
-    
-    Returns:
-        str: 'yyyymmddhhmmss' 형식의 현재 시간 (예: '20250326123456')
-    """
-    return datetime.now().strftime('%Y%m%d%H%M%S')
+from backend.utils.common import get_current_time
 
 class Fund(Base):
     """
@@ -39,8 +30,8 @@ class Fund(Base):
     state = Column(String, unique=False, index=True)  # 펀드상태
     invest_type = Column(String, nullable=True, index=True)  # 투자유형
     note = Column(String, nullable=True, index=True)  # 참고사항
-    created_at = Column(String, default=get_current_time)  # 생성 시간
-    updated_at = Column(String, default=get_current_time, onupdate=get_current_time)  # 수정 시간
+    created_at = Column(String, default=lambda: get_current_time(as_string=True))  # 생성 시간
+    updated_at = Column(String, default=lambda: get_current_time(as_string=True), onupdate=lambda: get_current_time(as_string=True))  # 수정 시간
 
 
 # 펀드 ID 자동 생성 함수
