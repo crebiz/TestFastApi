@@ -39,10 +39,9 @@ class CodeService:
     def update_code_group(db: Session, group_id: str, code_group: CodeGroupUpdate):
         db_code_group = db.query(CodeGroup).filter(CodeGroup.id == group_id).first()
         if db_code_group:
-            update_data = code_group.dict(exclude_unset=True)
+            update_data = code_group.model_dump(exclude_unset=True)
             for key, value in update_data.items():
                 setattr(db_code_group, key, value)
-            db_code_group.updated_at = datetime.now()
             db.commit()
             db.refresh(db_code_group)
         return db_code_group
@@ -90,10 +89,9 @@ class CodeService:
     def update_code_detail(db: Session, detail_id: str, code_detail: CodeDetailUpdate):
         db_code_detail = db.query(CodeDetail).filter(CodeDetail.id == detail_id).first()
         if db_code_detail:
-            update_data = code_detail.dict(exclude_unset=True)
+            update_data = code_detail.model_dump(exclude_unset=True)
             for key, value in update_data.items():
                 setattr(db_code_detail, key, value)
-            db_code_detail.updated_at = datetime.now()
             db.commit()
             db.refresh(db_code_detail)
         return db_code_detail

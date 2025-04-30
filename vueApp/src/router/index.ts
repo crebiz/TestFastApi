@@ -5,6 +5,8 @@ import DashboardPage from '../views/dashboard/DashboardPage.vue'
 import ProfilePage from '../views/dashboard/ProfilePage.vue'
 import FundPage from '../views/dashboard/FundPage.vue'
 import CodePage from '../views/code/CodePage.vue'
+import CardPage from '../views/card/CardPage.vue'
+
 
 
 // 스토어 가져오기
@@ -35,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'fund',
         name: 'fund',
         component: FundPage
+      },
+      {
+        path: 'card',
+        name: 'card',
+        component: CardPage
       },
       {
         path: 'code',

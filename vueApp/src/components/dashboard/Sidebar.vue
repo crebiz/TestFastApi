@@ -51,6 +51,7 @@ export default defineComponent({
       { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard' },
       { title: 'Login Info', icon: 'mdi-account', to: '/dashboard/profile' },
       { title: 'Fund', icon: 'mdi-cash-multiple', to: '/dashboard/fund' },
+      { title: 'Card', icon: 'mdi-card-bulleted', to: '/dashboard/card' },
       { title: 'Code', icon: 'mdi-code-brackets', to: '/dashboard/code' }
     ];
 
