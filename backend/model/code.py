@@ -29,6 +29,7 @@ class CodeDetail(Base):
     value = Column(String(100))
     description = Column(String(255))
     sort_order = Column(String(10))  # 정렬 순서
+    icon = Column(String(255))  # 아이콘
     is_active = Column(Boolean, default=True)
     created_at = Column(String, default=lambda: get_current_time(as_string=True))  # 생성 시간
     updated_at = Column(String, default=lambda: get_current_time(as_string=True), onupdate=lambda: get_current_time(as_string=True))  # 수정 시간

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
+from sqlalchemy import cast, Integer
 
 from sqlalchemy.orm import Session
 
@@ -15,7 +16,7 @@ class CodeService:
         query = db.query(CodeGroup)
         if is_active is not None:
             query = query.filter(CodeGroup.is_active == is_active)
-        return query.offset(skip).limit(limit).all()
+        return query.order_by(cast(CodeGroup.sort_order, Integer), CodeGroup.id).offset(skip).limit(limit).all()
 
     @staticmethod
     def get_code_group(db: Session, group_id: str):
@@ -62,7 +63,7 @@ class CodeService:
             query = query.filter(CodeDetail.group_id == group_id)
         if is_active is not None:
             query = query.filter(CodeDetail.is_active == is_active)
-        return query.offset(skip).limit(limit).all()
+        return query.order_by(cast(CodeDetail.sort_order, Integer), CodeDetail.group_id, CodeDetail.id).offset(skip).limit(limit).all()
 
     @staticmethod
     def get_code_detail(db: Session, detail_id: str):
@@ -77,7 +78,8 @@ class CodeService:
             value=code_detail.value,
             description=code_detail.description,
             sort_order=code_detail.sort_order,
-            is_active=code_detail.is_active
+            is_active=code_detail.is_active,
+            icon=code_detail.icon
         )
         db.add(db_code_detail)
         db.commit()

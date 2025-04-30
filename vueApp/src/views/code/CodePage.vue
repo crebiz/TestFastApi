@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-row>
-      <!-- 부모코드 관리 (왼쪽) -->
-      <v-col cols="12" md="5">
-        <v-card elevation="3" rounded="lg" class="h-100">
+      <!-- 부모코드 관리 (상단) -->
+      <v-col cols="12">
+        <v-card elevation="3" rounded="lg" class="mb-4">
           <v-toolbar flat color="primary" dark class="rounded-t-lg">
             <v-icon class="me-2">mdi-code-brackets</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">그룹코드 관리</v-toolbar-title>
@@ -51,9 +51,9 @@
         </v-card>
       </v-col>
 
-      <!-- 자식코드 관리 (오른쪽) -->
-      <v-col cols="12" md="7">
-        <v-card elevation="3" rounded="lg" class="h-100">
+      <!-- 자식코드 관리 (하단) -->
+      <v-col cols="12">
+        <v-card elevation="3" rounded="lg">
           <v-toolbar flat color="secondary" dark class="rounded-t-lg">
             <v-icon class="me-2">mdi-code-array</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">
@@ -72,7 +72,7 @@
             <v-data-table :headers="childHeaders" :items="childCodes" :loading="isChildLoading" :items-per-page="-1"
               hide-default-footer class="elevation-1" :disabled="!selectedParentCode">
               <template v-slot:item="props">
-                <tr>
+                <tr @click="openChildDrawer(props.item, 'edit')" style="cursor: pointer;">
                   <td>{{ props.item.code_id }}</td>
                   <td>{{ props.item.code_name }}</td>
                   <td>{{ props.item.sort_order }}</td>
@@ -82,9 +82,6 @@
                       :text="props.item.use_yn === 'Y' ? '사용' : '미사용'"></v-chip>
                   </td>
                   <td>
-                    <v-icon size="small" class="me-2" @click.stop="openChildDrawer(props.item, 'edit')">
-                      mdi-pencil
-                    </v-icon>
                     <v-icon size="small" @click.stop="deleteChildCode(props.item)">
                       mdi-delete
                     </v-icon>
@@ -96,7 +93,7 @@
                 <div class="text-center pa-5">
                   <v-icon size="x-large" color="grey-lighten-1" class="mb-3">mdi-database-off</v-icon>
                   <div class="text-subtitle-1 text-grey">
-                    {{ selectedParentCode ? '조회결과가 없습니다.' : '왼쪽에서 그룹코드를 선택해주세요.' }}
+                    {{ selectedParentCode ? '조회결과가 없습니다.' : '상단에서 그룹코드를 선택해주세요.' }}
                   </div>
                 </div>
               </template>
@@ -134,7 +131,8 @@
                   <template v-slot:append>
                     <v-text-field v-model="editedParentCode.code_id" :disabled="parentDialogMode === 'edit'"
                       variant="outlined" density="compact" hide-details class="edit-field" style="min-width: 200px;"
-                      required></v-text-field>
+                      required @input="editedParentCode.code_id = $event.target.value.toUpperCase()"
+                      placeholder="예: G001"></v-text-field>
                   </template>
                 </v-list-item>
 
@@ -210,19 +208,6 @@
         </v-toolbar>
 
         <v-card-text class="pa-6">
-          <v-sheet rounded class="pa-4 mb-6 bg-grey-lighten-4">
-            <div class="d-flex align-center mb-2">
-              <v-avatar color="secondary" size="36" class="mr-3">
-                <v-icon color="white">mdi-code-array</v-icon>
-              </v-avatar>
-              <div>
-                <div class="text-h6 font-weight-bold">상세코드 {{ childDialogMode === 'add' ? '추가' : '수정' }}</div>
-                <div class="text-caption text-grey" v-if="childDialogMode === 'edit'">코드 ID: {{ editedChildCode.code_id
-                  }}</div>
-              </div>
-            </div>
-          </v-sheet>
-
           <v-form @submit.prevent="saveChildCode">
             <v-card flat class="mb-4 px-2">
               <v-list>
@@ -252,7 +237,8 @@
                   <template v-slot:append>
                     <v-text-field v-model="editedChildCode.code_id" :disabled="childDialogMode === 'edit'"
                       variant="outlined" density="compact" hide-details class="edit-field" style="min-width: 200px;"
-                      required></v-text-field>
+                      required @input="editedChildCode.code_id = $event.target.value.toUpperCase()"
+                      placeholder="예: C001"></v-text-field>
                   </template>
                 </v-list-item>
 
@@ -269,6 +255,22 @@
                   <template v-slot:append>
                     <v-text-field v-model="editedChildCode.code_name" variant="outlined" density="compact" hide-details
                       class="edit-field" style="min-width: 200px;" required></v-text-field>
+                  </template>
+                </v-list-item>
+
+                <v-divider></v-divider>
+
+                <!-- 아이콘 -->
+                <v-list-item density="compact" class="py-3">
+                  <template v-slot:prepend>
+                    <v-avatar color="indigo" size="32" class="mr-3">
+                      <v-icon color="white" size="small">mdi-emoticon-outline</v-icon>
+                    </v-avatar>
+                  </template>
+                  <v-list-item-title class="text-subtitle-2 font-weight-medium">아이콘</v-list-item-title>
+                  <template v-slot:append>
+                    <v-text-field v-model="editedChildCode.icon" variant="outlined" density="compact" hide-details
+                      class="edit-field" style="min-width: 200px;" placeholder="예: mdi-emoticon-outline"></v-text-field>
                   </template>
                 </v-list-item>
 
@@ -306,34 +308,53 @@
                 </v-list-item>
               </v-list>
             </v-card>
-
             <!-- 설명 -->
             <v-sheet rounded class="pa-4 mb-4 bg-grey-lighten-5">
               <div class="text-subtitle-2 font-weight-medium mb-2">설명</div>
               <v-textarea v-model="editedChildCode.description" variant="outlined" density="compact" hide-details
                 placeholder="설명을 입력하세요" rows="3"></v-textarea>
             </v-sheet>
-
-            <v-card-actions class="pa-4">
-              <v-spacer></v-spacer>
-              <v-btn variant="text" color="grey" @click="childDialog = false">취소</v-btn>
-              <v-btn color="primary" variant="elevated" @click="saveChildCode">
-                <v-icon left>mdi-content-save</v-icon>
-                저장
-              </v-btn>
-            </v-card-actions>
           </v-form>
+          <v-card-actions class="pa-4">
+            <v-spacer></v-spacer>
+            <v-btn variant="text" color="grey" @click="childDialog = false">취소</v-btn>
+            <v-btn color="primary" variant="elevated" @click="saveChildCode">
+              <v-icon left>mdi-content-save</v-icon>
+              저장
+            </v-btn>
+          </v-card-actions>
         </v-card-text>
       </v-card>
     </v-navigation-drawer>
 
     <!-- 스낵바 -->
-    <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="3000">
+    <v-snackbar v-model="snackbar" :color="snackbarColor" location="bottom right" timeout="2500">
       {{ snackbarText }}
       <template v-slot:actions>
         <v-btn variant="text" @click="snackbar = false">닫기</v-btn>
       </template>
     </v-snackbar>
+
+    <!-- 확인 다이얼로그 (Material 스타일) -->
+    <v-dialog v-model="confirmDialog" max-width="420" persistent>
+      <v-card>
+        <v-card-title class="text-h5 pa-4">
+          <v-icon color="primary" class="mr-2">mdi-alert-circle</v-icon>
+          {{ confirmTitle }}
+        </v-card-title>
+        <v-card-text class="pa-4 pt-0">
+          {{ confirmMessage }}
+        </v-card-text>
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="grey" @click="confirmDialog = false">취소</v-btn>
+          <v-btn color="error" variant="elevated" @click="confirmAction()">
+            <v-icon left>mdi-delete</v-icon>
+            삭제
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -382,6 +403,7 @@ interface ChildCode {
   description: string;
   sort_order: number;
   use_yn: string;
+  icon?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -417,7 +439,8 @@ export default defineComponent({
       code_name: '',
       description: '',
       sort_order: 0,
-      use_yn: 'Y'
+      use_yn: 'Y',
+      icon: ''
     });
 
     // 스낵바 관련 상태
@@ -573,6 +596,9 @@ export default defineComponent({
       }
 
       try {
+        // 코드 ID를 대문자로 변환
+        editedParentCode.value.code_id = editedParentCode.value.code_id.toUpperCase();
+
         // API 요청 데이터 형식에 맞게 변환
         const apiData = {
           id: editedParentCode.value.code_id,
@@ -600,29 +626,32 @@ export default defineComponent({
       }
     };
 
-    // 그룹코드 삭제
+    // 그룹코드 삭제 (Vuetify 다이얼로그 사용)
     const deleteParentCode = async (item: ParentCode) => {
-      if (!confirm(`"${item.code_name}" 그룹코드를 삭제하시겠습니까? 관련된 모든 상세코드도 함께 삭제됩니다.`)) {
-        return;
-      }
+      showConfirmDialog(
+        '그룹코드 삭제',
+        `"${item.code_name}" 그룹코드를 삭제하시겠습니까? 관련된 모든 상세코드도 함께 삭제됩니다.`,
+        async () => {
+          try {
+            // 그룹코드 삭제 API 호출 - 환경별 기본 URL 사용
+            await axios.delete(getApiUrl(`/api/codes/groups/${item.code_id}`));
 
-      try {
-        // 그룹코드 삭제 API 호출 - 환경별 기본 URL 사용
-        await axios.delete(getApiUrl(`/api/codes/groups/${item.code_id}`));
+            // 선택된 그룹코드가 삭제된 경우 선택 해제
+            if (selectedParentCode.value && selectedParentCode.value.code_id === item.code_id) {
+              selectedParentCode.value = null;
+              childCodes.value = [];
+            }
 
-        // 선택된 그룹코드가 삭제된 경우 선택 해제
-        if (selectedParentCode.value && selectedParentCode.value.code_id === item.code_id) {
-          selectedParentCode.value = null;
-          childCodes.value = [];
+            // 그룹코드 목록 새로고침
+            fetchParentCodes();
+            showSnackbar('그룹코드가 삭제되었습니다.', 'success');
+          } catch (error) {
+            console.error('그룹코드 삭제 중 오류 발생:', error);
+            showSnackbar('그룹코드 삭제에 실패했습니다.', 'error');
+          }
+          confirmDialog.value = false;
         }
-
-        // 그룹코드 목록 새로고침
-        fetchParentCodes();
-        showSnackbar('그룹코드가 삭제되었습니다.', 'success');
-      } catch (error) {
-        console.error('그룹코드 삭제 중 오류 발생:', error);
-        showSnackbar('그룹코드 삭제에 실패했습니다.', 'error');
-      }
+      );
     };
 
     // 상세코드 슬라이드 패널 열기
@@ -640,7 +669,8 @@ export default defineComponent({
           code_name: '',
           description: '',
           sort_order: childCodes.value.length + 1,
-          use_yn: 'Y'
+          use_yn: 'Y',
+          icon: ''
         };
       }
 
@@ -661,6 +691,9 @@ export default defineComponent({
       }
 
       try {
+        // 코드 ID를 대문자로 변환
+        editedChildCode.value.code_id = editedChildCode.value.code_id.toUpperCase();
+
         // API 요청 데이터 형식에 맞게 변환
         const apiData = {
           id: editedChildCode.value.code_id,
@@ -668,7 +701,8 @@ export default defineComponent({
           name: editedChildCode.value.code_name,
           description: editedChildCode.value.description,
           sort_order: editedChildCode.value.sort_order.toString(),
-          is_active: editedChildCode.value.use_yn === 'Y'
+          is_active: editedChildCode.value.use_yn === 'Y',
+          icon: editedChildCode.value.icon || ''
         };
 
         if (childDialogMode.value === 'add') {
@@ -692,25 +726,41 @@ export default defineComponent({
       }
     };
 
-    // 상세코드 삭제
+    // 상세코드 삭제 (Vuetify 다이얼로그 사용)
     const deleteChildCode = async (item: ChildCode) => {
-      if (!confirm(`"${item.code_name}" 상세코드를 삭제하시겠습니까?`)) {
-        return;
-      }
+      showConfirmDialog(
+        '상세코드 삭제',
+        `"${item.code_name}" 상세코드를 삭제하시겠습니까?`,
+        async () => {
+          try {
+            // 상세코드 삭제 API 호출 - 환경별 기본 URL 사용
+            await axios.delete(getApiUrl(`/api/codes/details/${item.code_id}`));
 
-      try {
-        // 상세코드 삭제 API 호출 - 환경별 기본 URL 사용
-        await axios.delete(getApiUrl(`/api/codes/details/${item.code_id}`));
-
-        // 상세코드 목록 새로고침
-        if (selectedParentCode.value) {
-          fetchChildCodes(selectedParentCode.value);
+            // 상세코드 목록 새로고침
+            if (selectedParentCode.value) {
+              fetchChildCodes(selectedParentCode.value);
+            }
+            showSnackbar('상세코드가 삭제되었습니다.', 'success');
+          } catch (error) {
+            console.error('상세코드 삭제 중 오류 발생:', error);
+            showSnackbar('상세코드 삭제에 실패했습니다.', 'error');
+          }
+          confirmDialog.value = false;
         }
-        showSnackbar('상세코드가 삭제되었습니다.', 'success');
-      } catch (error) {
-        console.error('상세코드 삭제 중 오류 발생:', error);
-        showSnackbar('상세코드 삭제에 실패했습니다.', 'error');
-      }
+      );
+    };
+
+    // 확인 다이얼로그 상태 및 함수
+    const confirmDialog = ref(false);
+    const confirmTitle = ref('');
+    const confirmMessage = ref('');
+    const confirmAction = ref<() => Promise<void>>(() => Promise.resolve());
+
+    const showConfirmDialog = (title: string, message: string, action: () => Promise<void>) => {
+      confirmTitle.value = title;
+      confirmMessage.value = message;
+      confirmAction.value = action;
+      confirmDialog.value = true;
     };
 
     // 스낵바 표시
@@ -757,7 +807,13 @@ export default defineComponent({
       closeChildDialog,
       saveChildCode,
       deleteChildCode,
-      showSnackbar
+      showSnackbar,
+      // 확인 다이얼로그 상태 및 함수 반환
+      confirmDialog,
+      confirmTitle,
+      confirmMessage,
+      confirmAction,
+      showConfirmDialog,
     };
   }
 });

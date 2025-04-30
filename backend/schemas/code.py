@@ -9,6 +9,7 @@ class CodeDetailBase(BaseModel):
     description: Optional[str] = None
     sort_order: Optional[str] = None
     is_active: bool = True
+    icon: Optional[str] = None
 
 
 class CodeDetailCreate(CodeDetailBase):

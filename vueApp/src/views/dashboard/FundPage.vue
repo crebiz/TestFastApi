@@ -7,7 +7,7 @@
             <v-icon class="mr-2 ml-2">mdi-cash-multiple</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">펀드 관리</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn variant="elevated" color="white" class="text-primary mr-2">
+            <v-btn variant="elevated" color="white" class="text-primary mr-2" @click="createNewFund">
               <v-icon left>mdi-plus</v-icon>
               새 펀드 생성
             </v-btn>
@@ -149,7 +149,7 @@
                   <td>{{ item.fund_nm }}</td>
                   <td>{{ item.financial_comp }}</td>
                   <td>{{ item.account_num }}</td>
-                  <td>{{ item.invest_type || '정보 없음' }}</td>
+                  <td>{{ item.invest_type ? getInvestTypeLabel(item.invest_type) : '정보 없음' }}</td>
                   <td class="text-truncate" style="max-width: 350px;">
                     <v-tooltip location="top" max-width="500">
                       <template v-slot:activator="{ props }">
@@ -251,16 +251,17 @@
       <v-card flat class="h-100" style="border-radius: 0">
         <v-toolbar flat dark class="pa-3">
           <v-toolbar-title class="text-h6 font-weight-medium ml-2 text-truncate">
-            펀드 상세 정보
+            {{ isNewFund ? '새 펀드 생성' : '펀드 상세 정보' }}
           </v-toolbar-title>
           <v-btn icon @click="cancelEdit()" class="mr-2">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
 
-        <v-card-text v-if="selectedFund" class="pa-6">
-          <v-sheet rounded class="pa-4 mb-6 bg-grey-lighten-4">
-            <div class="d-flex align-center mb-2">
+        <v-card-text v-if="selectedFund || isNewFund" class="pa-6">
+          <v-sheet v-if="!isNewFund" rounded class="pa-4 mb-6 bg-grey-lighten-4">
+            <!-- 기존펀드 정보 표시 -->
+            <div class="d-flex align-center mb-2" v-if="selectedFund">
               <v-avatar color="primary" size="36" class="mr-3">
                 <v-icon color="white">mdi-bank</v-icon>
               </v-avatar>
@@ -272,6 +273,18 @@
               <v-chip :color="getStatusColor(selectedFund.state)" label>
                 {{ selectedFund.state }}
               </v-chip>
+            </div>
+          </v-sheet>
+          <v-sheet v-else rounded class="pa-4 mb-6 bg-grey-lighten-4">
+            <div class="d-flex align-center mb-2">
+              <v-avatar color="primary" size="36" class="mr-3">
+                <v-icon color="white">mdi-plus-circle</v-icon>
+              </v-avatar>
+              <div>
+                <div class="text-h6 font-weight-bold">새 펀드 정보</div>
+                <div class="text-caption text-grey">필수 항목을 모두 입력해주세요.</div>
+              </div>
+              <v-spacer></v-spacer>
             </div>
           </v-sheet>
 
@@ -286,7 +299,8 @@
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">펀드명</v-list-item-title>
                 <template v-slot:append>
-                  <div v-if="!isEditing" class="text-body-1">{{ selectedFund.fund_nm }}</div>
+                  <div v-if="!isEditing && !isNewFund" class="text-body-1">{{ selectedFund ? selectedFund.fund_nm : ''
+                  }}</div>
                   <v-text-field v-else v-model="editedFund.fund_nm" variant="outlined" density="compact" hide-details
                     class="edit-field"></v-text-field>
                 </template>
@@ -303,7 +317,7 @@
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">금융사</v-list-item-title>
                 <template v-slot:append>
-                  <div v-if="!isEditing" class="text-body-1">{{ selectedFund.financial_comp }}</div>
+                  <div v-if="!isEditing && !isNewFund" class="text-body-1">{{ selectedFund?.financial_comp }}</div>
                   <v-text-field v-else v-model="editedFund.financial_comp" variant="outlined" density="compact"
                     hide-details class="edit-field"></v-text-field>
                 </template>
@@ -318,19 +332,37 @@
                     <v-icon color="white" size="small">mdi-tag</v-icon>
                   </v-avatar>
                 </template>
-                <v-list-item-title class="text-subtitle-2 font-weight-medium">유형</v-list-item-title>
+                <v-list-item-title class="text-subtitle-2 font-weight-medium">펀드목적</v-list-item-title>
                 <template v-slot:append>
-                  <div v-if="!isEditing" class="text-body-1">
-                    {{ getFundTypeLabel(selectedFund.type) }}
+                  <div v-if="!isEditing && !isNewFund" class="text-body-1">
+                    {{ selectedFund ? getFundTypeLabel(selectedFund.type) : '' }}
                   </div>
-                  <v-select v-else v-model="editedFund.type" :items="fundTypes" item-title="label" item-value="value"
-                    variant="outlined" density="compact" hide-details class="edit-field">
+                  <v-select v-else v-model="editedFund.type" :items="fundTypeOptions" item-title="label"
+                    item-value="value" variant="outlined" density="compact" hide-details class="edit-field">
                     <template v-slot:selection="{ item }">
                       <div class="d-flex align-center text-truncate">
                         <span class="text-truncate">{{ item.raw.label }}</span>
                       </div>
                     </template>
                   </v-select>
+                </template>
+              </v-list-item>
+
+              <v-divider></v-divider>
+
+              <!-- 계좌번호 -->
+              <v-list-item density="compact" class="py-3">
+                <template v-slot:prepend>
+                  <v-avatar color="blue" size="32" class="mr-3">
+                    <v-icon color="white" size="small">mdi-credit-card</v-icon>
+                  </v-avatar>
+                </template>
+                <v-list-item-title class="text-subtitle-2 font-weight-medium">계좌번호</v-list-item-title>
+                <template v-slot:append>
+                  <div v-if="!isEditing && !isNewFund" class="text-body-1">{{ selectedFund ? selectedFund.account_num :
+                    '' }}</div>
+                  <v-text-field v-else v-model="editedFund.account_num" variant="outlined" density="compact"
+                    hide-details class="edit-field" placeholder="계좌번호를 입력하세요"></v-text-field>
                 </template>
               </v-list-item>
 
@@ -345,9 +377,17 @@
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">투자유형</v-list-item-title>
                 <template v-slot:append>
-                  <div v-if="!isEditing" class="text-body-1">{{ selectedFund.invest_type || '정보 없음' }}</div>
-                  <v-select v-else v-model="editedFund.invest_type" :items="investTypes" variant="outlined"
-                    density="compact" hide-details class="edit-field"></v-select>
+                  <div v-if="!isEditing && !isNewFund" class="text-body-1">
+                    {{ selectedFund ? (getInvestTypeLabel(selectedFund.invest_type) || '정보 없음') : '' }}
+                  </div>
+                  <v-select v-else v-model="editedFund.invest_type" :items="investTypes" item-title="label"
+                    item-value="value" variant="outlined" density="compact" hide-details class="edit-field">
+                    <template v-slot:selection="{ item }">
+                      <div class="d-flex align-center text-truncate">
+                        <span class="text-truncate">{{ item.raw.label }}</span>
+                      </div>
+                    </template>
+                  </v-select>
                 </template>
               </v-list-item>
 
@@ -362,7 +402,9 @@
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">생성일</v-list-item-title>
                 <template v-slot:append>
-                  <div class="text-body-1">{{ formatDate(selectedFund.created_at) }}</div>
+                  <div v-if="!isNewFund" class="text-body-1">{{ selectedFund ? formatDate(selectedFund.created_at) : ''
+                  }}</div>
+                  <div v-else class="text-body-1 text-grey-darken-1">생성 시 자동 입력됩니다</div>
                 </template>
               </v-list-item>
 
@@ -377,7 +419,9 @@
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">최근 수정일</v-list-item-title>
                 <template v-slot:append>
-                  <div class="text-body-1">{{ formatDate(selectedFund.updated_at) }}</div>
+                  <div v-if="!isNewFund" class="text-body-1">{{ selectedFund ? formatDate(selectedFund.updated_at) : ''
+                  }}</div>
+                  <div v-else class="text-body-1 text-grey-darken-1">생성 시 자동 입력됩니다</div>
                 </template>
               </v-list-item>
             </v-list>
@@ -387,8 +431,8 @@
 
           <v-sheet rounded class="pa-4 bg-grey-lighten-5">
             <div class="text-subtitle-2 font-weight-medium mb-2 mt-2">참고사항</div>
-            <div v-if="!isEditing" class="text-body-2 text-grey-darken-1">
-              {{ selectedFund.note || '참고사항이 없습니다.' }}
+            <div v-if="!isEditing && !isNewFund" class="text-body-2 text-grey-darken-1">
+              {{ selectedFund?.note || '참고사항이 없습니다.' }}
             </div>
             <v-textarea v-else v-model="editedFund.note" variant="outlined" density="compact" hide-details
               placeholder="참고사항을 입력하세요" rows="5" class="mt-1 edit-field"></v-textarea>
@@ -400,15 +444,15 @@
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn variant="text" color="grey" @click="cancelEdit()">
-            {{ isEditing ? '취소' : '닫기' }}
+            {{ isNewFund || isEditing ? '취소' : '닫기' }}
           </v-btn>
-          <v-btn v-if="!isEditing" color="primary" variant="elevated" @click="startEdit">
+          <v-btn v-if="!isEditing && !isNewFund" color="primary" variant="elevated" @click="startEdit">
             <v-icon left>mdi-pencil</v-icon>
             수정
           </v-btn>
-          <v-btn v-if="isEditing" color="primary" variant="elevated" @click="saveFund">
+          <v-btn v-if="isEditing || isNewFund" color="primary" variant="elevated" @click="saveFund">
             <v-icon left>mdi-content-save</v-icon>
-            저장
+            {{ isNewFund ? '생성' : '저장' }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -543,10 +587,24 @@ export default defineComponent({
     }
 
     // 컴포넌트 마운트 시 데이터 가져오기
-    onMounted(() => {
-      fetchTotalFunds();
-      fetchFunds('P'); //P:개인연금, W:퇴직연금, F:펀드투자
-      fetchInvestTypeDistribution();
+    onMounted(async () => {
+      try {
+        // v-chip-group용 펀드 유형 목록 (전체 포함)
+        fundTypes.value = await fetchCodeList('FUND_TYPE', true);
+
+        // 드롭다운용 펀드 유형 목록 (전체 제외)
+        fundTypeOptions.value = await fetchCodeList('FUND_TYPE', false);
+
+        // investTypes 변수 초기화 - 반드시 INVEST_TYPE 코드값만 가져오도록 함
+        investTypes.value = await fetchCodeList('INVEST_TYPE', false);
+        console.log('투자유형 코드 목록 로드:', investTypes.value);
+
+        fetchTotalFunds();
+        fetchFunds('P'); //P:개인연금, W:퇴직연금, F:펀드투자
+        fetchInvestTypeDistribution();
+      } catch (error) {
+        console.error('코드 데이터 로딩 중 오류 발생:', error);
+      }
     });
 
     const getStatusColor = (status: string) => {
@@ -555,9 +613,18 @@ export default defineComponent({
       return 'grey';
     };
 
+    const getCodeLabel = (typeValue: string, codeArray: { value: string, label: string, icon?: string }[]) => {
+      const codeItem = codeArray.find(type => type.value === typeValue);
+      return codeItem ? codeItem.label : typeValue;
+    };
+
+    // 기존 함수들은 새 함수를 호출하는 래퍼 함수로 유지하여 기존 코드 호환성 유지
     const getFundTypeLabel = (typeValue: string) => {
-      const fundType = fundTypes.value.find(type => type.value === typeValue);
-      return fundType ? fundType.label : typeValue;
+      return getCodeLabel(typeValue, fundTypes.value);
+    };
+
+    const getInvestTypeLabel = (typeValue: string) => {
+      return getCodeLabel(typeValue, investTypes.value);
     };
 
     // 날짜 포맷 변환 (yyyymmddhhmmss -> yyyy-mm-dd)
@@ -572,37 +639,12 @@ export default defineComponent({
     // 펀드 상세 정보 다이얼로그
     const fundDialog = ref(false);
     const selectedFund = ref<Fund | null>(null);
+    const isNewFund = ref(false);
     const isEditing = ref(false);
     const editedFund = ref<Partial<Fund>>({});
-    const fundTypes = ref([
-      { value: '', label: '전체', icon: 'mdi-home' },
-      { value: 'P', label: '개인연금', icon: 'mdi-account-cash' },
-      { value: 'W', label: '퇴직연금', icon: 'mdi-briefcase-outline' },
-      { value: 'F', label: '펀드투자', icon: 'mdi-chart-box-outline' },
-      { value: 'O', label: '해외펀드', icon: 'mdi-earth' }
-    ]);
-
-    const investTypes = ref([
-      '일반주식',
-      '글로벌주식',
-      '아시아태평양주식',
-      '북미주식',
-      '유럽주식',
-      '일본주식',
-      '인도주식',
-      '베트남주식',
-      '배당주식',
-      '정보기술',
-      '기초소재',
-      '금융',
-      '기타인덱스',
-      '신흥국채권',
-      '글로벌채권',
-      '글로벌리츠재간접',
-      '글로벌하이일드채권',
-      '글로벌라이프싸이클',
-      '글로벌보수적자산배분'
-    ]);
+    const fundTypes = ref<{ value: string, label: string, icon: string }[]>([]);
+    const fundTypeOptions = ref<{ value: string, label: string, icon: string }[]>([]);
+    const investTypes = ref<{ value: string, label: string, icon: string }[]>([]);
 
     const selectedType = ref('P');
 
@@ -610,8 +652,40 @@ export default defineComponent({
       fetchFunds(newType);
     });
 
+    const fetchCodeList = async (groupCode: string, includeAll: boolean = false) => {
+      let codeMappings: { value: string, label: string, icon: string }[] = [];
+
+      try {
+        // 그룹코드로 필터링하여 해당 그룹의 코드만 가져오기
+        const response = await axios.get(getApiUrl(`/api/codes/details?group_id=${groupCode}`));
+
+        // 코드 리스트 생성
+        codeMappings = response.data.map((code: any) => ({
+          value: code.id,
+          label: code.name,
+          icon: code.icon
+        }));
+
+        // includeAll 파라미터가 true인 경우에만 '전체' 옵션 추가
+        if (includeAll) {
+          return [
+            { value: '', label: '전체', icon: 'mdi-home' },
+            ...codeMappings
+          ];
+        }
+
+        return codeMappings;
+      } catch (err) {
+        console.error(`공통코드 조회 실패 (${groupCode}):`, err);
+        return [];
+      }
+    }
+
     const viewFund = (fund: Fund | any) => {
       console.log('Viewing fund:', fund);
+      // 새로운 펀드를 보기 전에 수정 모드 초기화
+      isEditing.value = false;
+      isNewFund.value = false;
       selectedFund.value = fund;
       fundDialog.value = true;
     };
@@ -632,12 +706,22 @@ export default defineComponent({
 
     const cancelEdit = () => {
       // 수정 모드 취소
-      if (isEditing.value) {
+      if (isEditing.value || isNewFund.value) {
         isEditing.value = false;
+        isNewFund.value = false;
         editedFund.value = {}; // 수정 내용 초기화
+
+        // 새 펀드 생성 모드였다면 다이얼로그 닫기
+        if (isNewFund.value) {
+          fundDialog.value = false;
+        }
       } else {
         // 수정 모드가 아닌 경우 다이얼로그 닫기
         fundDialog.value = false;
+        // 수정 모드 초기화 (중요: 닫을 때 반드시 초기화)
+        isEditing.value = false;
+        isNewFund.value = false;
+
         // 현재 선택된 펀드의 타입으로 목록 새로고침
         if (selectedFund.value && selectedFund.value.type) {
           fetchFunds(selectedFund.value.type);
@@ -647,7 +731,77 @@ export default defineComponent({
       }
     };
 
+    const createNewFund = () => {
+      // 새 펀드 생성 모드 활성화
+      isNewFund.value = true;
+      isEditing.value = false;
+
+      // 빈 펀드 객체 생성
+      editedFund.value = {
+        fund_nm: '',
+        financial_comp: '',
+        type: selectedType.value,
+        account_num: '',
+        state: 'active',
+        invest_type: '',
+        note: ''
+      };
+
+      // 선택된 펀드 초기화
+      selectedFund.value = null;
+
+      // 슬라이드 패널 열기
+      fundDialog.value = true;
+    }
+
     const saveFund = async () => {
+      // 새 펀드 생성 모드인 경우
+      if (isNewFund.value) {
+        try {
+          isLoading.value = true;
+
+          // 필수 필드 검증
+          if (!editedFund.value.fund_nm || !editedFund.value.financial_comp || !editedFund.value.type) {
+            snackbarText.value = '펀드명과 금융사는 필수 입력 항목입니다.';
+            snackbarColor.value = 'warning';
+            snackbar.value = true;
+            return;
+          }
+
+          // 백엔드 API 호출하여 새 펀드 생성
+          const response = await axios.post(getApiUrl('/funds/'), editedFund.value);
+
+          // 응답 데이터로 새 펀드 정보 설정
+          const newFund = response.data;
+
+          // 목록에 새 펀드 추가 및 정렬
+          funds.value.push(newFund);
+          funds.value = sortFunds(funds.value);
+
+          // 생성 모드 종료
+          isNewFund.value = false;
+          isEditing.value = false;
+
+          // 스낵바로 성공 메시지 표시
+          snackbarText.value = '새 펀드가 성공적으로 생성되었습니다.';
+          snackbarColor.value = 'success';
+          snackbar.value = true;
+
+          // 펀드 통계 업데이트
+          fetchTotalFunds();
+          fetchInvestTypeDistribution();
+        } catch (error) {
+          console.error('펀드 생성 중 오류 발생:', error);
+          snackbarText.value = '펀드 생성 중 오류가 발생했습니다.';
+          snackbarColor.value = 'error';
+          snackbar.value = true;
+        } finally {
+          isLoading.value = false;
+        }
+        return;
+
+      }
+
       // 수정된 내용이 있는지 확인
       if (!selectedFund.value || !editedFund.value) return;
 
@@ -848,18 +1002,30 @@ export default defineComponent({
         // 투자유형별 분포 계산
         const distribution: Record<string, number> = {};
 
+        // 코드값-코드명 매핑 생성
+        const codeToLabelMap: Record<string, string> = {};
+        if (investTypes.value && investTypes.value.length > 0) {
+          investTypes.value.forEach(type => {
+            codeToLabelMap[type.value] = type.label;
+          });
+        }
+
         // 초기화: 모든 투자유형에 대해 0으로 초기화
-        investTypes.value.forEach(type => {
-          distribution[type] = 0;
-        });
+        if (investTypes.value && investTypes.value.length > 0) {
+          investTypes.value.forEach(type => {
+            distribution[type.label] = 0;
+          });
+        }
 
         // 투자유형이 없는 펀드를 위한 추가 버킷
         distribution['지정되지 않음'] = 0;
 
-        // 각 펀드의 투자유형 카운트
+        // 각 펀드의 투자유형 카운트 (코드값을 코드명으로 변환)
         allFunds.forEach((fund: any) => {
           if (fund.invest_type) {
-            distribution[fund.invest_type] = (distribution[fund.invest_type] || 0) + 1;
+            // 코드값을 코드명으로 변환
+            const typeLabel = codeToLabelMap[fund.invest_type] || fund.invest_type;
+            distribution[typeLabel] = (distribution[typeLabel] || 0) + 1;
           } else {
             distribution['지정되지 않음']++;
           }
@@ -929,13 +1095,18 @@ export default defineComponent({
       selectedFund,
       selectedType,
       fundTypes,
+      fundTypeOptions,
       investTypes,
       getFundTypeLabel,
+      getInvestTypeLabel,
+      fetchCodeList,
       viewFund,
+      isNewFund,
       isEditing,
       editedFund,
       startEdit,
       cancelEdit,
+      createNewFund,
       saveFund,
       deleteFund,
       fetchFunds,
