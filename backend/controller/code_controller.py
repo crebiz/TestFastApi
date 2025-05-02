@@ -98,7 +98,7 @@ def get_code_detail(detail_id: str, db: Session = Depends(get_db)):
 
 @router.post("/details", response_model=CodeDetail, status_code=status.HTTP_201_CREATED)
 def create_code_detail(code_detail: CodeDetailCreate, db: Session = Depends(get_db)):
-    logger.info(f"상세 코드 생성: {code_detail.dict()}")
+    logger.info(f"상세 코드 생성: {code_detail.model_dump()}")
     # 그룹 코드 존재 여부 확인
     db_code_group = CodeService.get_code_group(db, group_id=code_detail.group_id)
     if not db_code_group:
@@ -116,7 +116,7 @@ def create_code_detail(code_detail: CodeDetailCreate, db: Session = Depends(get_
 
 @router.put("/details/{detail_id}", response_model=CodeDetail)
 def update_code_detail(detail_id: str, code_detail: CodeDetailUpdate, db: Session = Depends(get_db)):
-    logger.info(f"상세 코드 수정: detail_id={detail_id}, data={code_detail.dict()}")
+    logger.info(f"상세 코드 수정: detail_id={detail_id}, data={code_detail.model_dump()}")
     db_code_detail = CodeService.update_code_detail(db, detail_id=detail_id, code_detail=code_detail)
     if db_code_detail is None:
         logger.warning(f"상세 코드 없음: detail_id={detail_id}")

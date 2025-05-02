@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from backend.database.database import get_db
 from backend.schemas.card import Card, CardCreate, CardUpdate
+from backend.schemas.card_statistics import CardStatistics, MonthlyStat
 from backend.service.card_service import CardService
 
 # 로깅 설정
@@ -42,12 +43,43 @@ router = APIRouter(
 )
 
 
+@router.get("/statistics", response_model=CardStatistics)
+def get_card_statistics(
+    card_code: Optional[str] = None,
+    year: Optional[int] = None,
+    month: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    카드 사용내역 통계 조회
+    
+    - **card_code**: 카드 코드로 필터링 (예: 'SH', 'LT', 'SS')
+    - **year**: 연도로 필터링 (예: 2025)
+    - **month**: 월로 필터링 (예: 1-12)
+    """
+    logger.info(f"카드 사용내역 통계 조회: card_code={card_code}, year={year}, month={month}")
+    statistics = CardService.get_card_statistics(db, card_code=card_code, year=year, month=month)
+    return statistics
+
+
+@router.get("/all-monthly-stats", response_model=List[MonthlyStat])
+def get_all_monthly_stats(db: Session = Depends(get_db)):
+    """
+    전체 데이터의 월별 통계 조회 (선택한 월과 상관없이 전체 데이터 기반)
+    """
+    logger.info("전체 데이터의 월별 통계 조회")
+    monthly_stats = CardService.get_all_monthly_stats(db)
+    return monthly_stats
+
+
 @router.get("/", response_model=List[Card])
 def get_cards(
     skip: int = 0, 
-    limit: int = 100, 
+    limit: int = 200, 
     card_code: Optional[str] = None,
     category: Optional[str] = None,
+    year: Optional[int] = None,
+    month: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
     """
@@ -57,9 +89,11 @@ def get_cards(
     - **limit**: 최대 조회 레코드 수
     - **card_code**: 카드 코드로 필터링 (예: 'SH', 'LT', 'SS')
     - **category**: 분류로 필터링 (예: '식비', '교통', '쇼핑')
+    - **year**: 연도로 필터링 (예: 2025)
+    - **month**: 월로 필터링 (예: 1-12)
     """
-    logger.info(f"카드 사용내역 목록 조회: skip={skip}, limit={limit}, card_code={card_code}, category={category}")
-    cards = CardService.get_cards(db, skip=skip, limit=limit, card_code=card_code, category=category)
+    logger.info(f"카드 사용내역 목록 조회: skip={skip}, limit={limit}, card_code={card_code}, category={category}, year={year}, month={month}")
+    cards = CardService.get_cards(db, skip=skip, limit=limit, card_code=card_code, category=category, year=year, month=month)
     return cards
 
 
@@ -122,16 +156,17 @@ def delete_card(card_id: str, db: Session = Depends(get_db)):
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_excel(
     file: UploadFile = File(...),
-    card_code: str = Form(...),
+    year: int = Form(...),
+    month: int = Form(...),
     db: Session = Depends(get_db)
 ):
     """
     엑셀 파일 업로드를 통한 카드 사용내역 일괄 생성
     
     - **file**: 업로드할 엑셀 파일 (.xlsx, .xls)
-    - **card_code**: 카드 코드 (예: 'SH', 'LT', 'SS')
+    - **card_code**: (선택사항) 카드 코드. 지정하지 않으면 엑셀 파일에서 자동 추출
     """
-    logger.info(f"카드 사용내역 엑셀 업로드: filename={file.filename}, card_code={card_code}")
+    logger.info(f"카드 사용내역 엑셀 업로드: filename={file.filename}, year={year}, month={month}")
     
     # 파일 확장자 검증
     if not file.filename.endswith(('.xlsx', '.xls')):
@@ -141,27 +176,18 @@ async def upload_excel(
             detail="엑셀 파일(.xlsx, .xls)만 업로드 가능합니다."
         )
     
-    # 카드 코드 검증
-    valid_card_codes = ['SH', 'LT', 'SS']  # 신한, 롯데, 삼성
-    if card_code not in valid_card_codes:
-        logger.warning(f"잘못된 카드 코드: {card_code}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"유효한 카드 코드가 아닙니다. 유효한 값: {', '.join(valid_card_codes)}"
-        )
-    
     try:
         # 파일 내용 읽기
         contents = await file.read()
+        use_month = f"{year}{month:02d}"
         
         # 엑셀 파일 처리
-        result = CardService.process_excel_file(db, contents, card_code)
+        result = CardService.process_excel_file(db, contents, use_month=use_month)
         
         logger.info(f"엑셀 파일 처리 완료: {result}")
         return {
             "message": "엑셀 파일 처리 완료",
             "filename": file.filename,
-            "card_code": card_code,
             "result": result
         }
         

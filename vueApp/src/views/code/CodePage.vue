@@ -159,7 +159,7 @@
                   <template v-slot:prepend>
                     <v-avatar :color="editedParentCode.use_yn === 'Y' ? 'success' : 'error'" size="32" class="mr-3">
                       <v-icon color="white" size="small">{{ editedParentCode.use_yn === 'Y' ? 'mdi-check' : 'mdi-close'
-                        }}</v-icon>
+                      }}</v-icon>
                     </v-avatar>
                   </template>
                   <v-list-item-title class="text-subtitle-2 font-weight-medium">사용 여부</v-list-item-title>
@@ -260,6 +260,22 @@
 
                 <v-divider></v-divider>
 
+                <!-- 값(Value) -->
+                <v-list-item density="compact" class="py-3">
+                  <template v-slot:prepend>
+                    <v-avatar color="blue" size="32" class="mr-3">
+                      <v-icon color="white" size="small">mdi-key-variant</v-icon>
+                    </v-avatar>
+                  </template>
+                  <v-list-item-title class="text-subtitle-2 font-weight-medium">값(Value)</v-list-item-title>
+                  <template v-slot:append>
+                    <v-text-field v-model="editedChildCode.value" variant="outlined" density="compact" hide-details
+                      class="edit-field" style="min-width: 200px;" placeholder="예: SH"></v-text-field>
+                  </template>
+                </v-list-item>
+
+                <v-divider></v-divider>
+
                 <!-- 아이콘 -->
                 <v-list-item density="compact" class="py-3">
                   <template v-slot:prepend>
@@ -297,7 +313,7 @@
                   <template v-slot:prepend>
                     <v-avatar :color="editedChildCode.use_yn === 'Y' ? 'success' : 'error'" size="32" class="mr-3">
                       <v-icon color="white" size="small">{{ editedChildCode.use_yn === 'Y' ? 'mdi-check' : 'mdi-close'
-                        }}</v-icon>
+                      }}</v-icon>
                     </v-avatar>
                   </template>
                   <v-list-item-title class="text-subtitle-2 font-weight-medium">사용 여부</v-list-item-title>
@@ -400,6 +416,7 @@ interface ChildCode {
   parent_code_id: string;
   code_id: string;
   code_name: string;
+  value?: string;
   description: string;
   sort_order: number;
   use_yn: string;
@@ -699,6 +716,7 @@ export default defineComponent({
           id: editedChildCode.value.code_id,
           group_id: editedChildCode.value.parent_code_id,
           name: editedChildCode.value.code_name,
+          value: editedChildCode.value.value || '',
           description: editedChildCode.value.description,
           sort_order: editedChildCode.value.sort_order.toString(),
           is_active: editedChildCode.value.use_yn === 'Y',
