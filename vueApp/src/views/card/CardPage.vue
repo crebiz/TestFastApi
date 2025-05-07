@@ -34,10 +34,7 @@
               <v-col cols="12" md="6">
                 <v-file-input v-model="excelFile" label="엑셀 파일 업로드" accept=".xlsx, .xls" variant="outlined"
                   density="comfortable" prepend-icon="mdi-file-excel" :disabled="!selectedCardCompany" class="mb-4"
-                  @change="handleFileUpload" :hide-details="selectedCardCompany !== '전체'">
-                  <template v-slot:message v-if="selectedCardCompany === '전체'">
-                    <div class="text-error text-caption">엑셀 업로드를 위해서는 특정 카드사를 선택해주세요.</div>
-                  </template>
+                  @change="handleFileUpload">
                 </v-file-input>
               </v-col>
               <v-col cols="12" md="6">
@@ -1041,7 +1038,10 @@ const fetchCardTransactions = async () => {
     });
 
     // 통계 데이터 계산
-    calculateStatistics();
+    await calculateStatistics();
+
+    // 월별 통계 데이터도 함께 갱신
+    await fetchAllMonthlyStats();
   } catch (error: any) {
     console.error('카드 사용내역 조회 오류:', error);
     // 오류 상세 정보 추가 로깅
