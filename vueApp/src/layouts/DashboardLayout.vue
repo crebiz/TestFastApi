@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <AppBar :title="currentRouteName" @toggle-drawer="drawer = !drawer" />
     <Sidebar v-model:drawer="drawer" />
+    <AppBar :title="currentRouteName" @toggle-drawer="drawer = !drawer" />
     
     <v-main>
       <v-container fluid>

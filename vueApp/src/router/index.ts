@@ -6,8 +6,8 @@ import ProfilePage from '../views/profile/ProfilePage.vue'
 import FundPage from '../views/fund/FundPage.vue'
 import CodePage from '../views/code/CodePage.vue'
 import CardPage from '../views/card/CardPage.vue'
-
-
+import FlowPage from '../views/flow/FlowPage.vue'
+import BudgetPage from '../views/budget/BudgetPage.vue'
 
 // 스토어 가져오기
 import { useAuthStore } from '../stores/authStore'
@@ -29,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
         component: DashboardPage
       },
       {
+        path: 'budget',
+        name: 'budget',
+        component: BudgetPage
+      },
+      {
         path: 'profile',
         name: 'profile',
         component: ProfilePage
@@ -47,7 +52,13 @@ const routes: Array<RouteRecordRaw> = [
         path: 'code',
         name: 'code',
         component: CodePage
-      }    ]
+      },
+      {
+        path: 'flow',
+        name: 'flow',
+        component: FlowPage
+      },
+    ]
   }
 ]
 

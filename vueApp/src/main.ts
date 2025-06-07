@@ -12,12 +12,23 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 
+// localStorage 안전하게 접근하기 위한 함수
+function getStoredTheme(): string {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem('theme') || 'light'
+    }
+  } catch (e) {
+    console.error('localStorage에 접근할 수 없습니다:', e)
+  }
+  return 'light'
+}
+
 const vuetify = createVuetify({
   components,
   directives,
   theme: {
-    defaultTheme: 'light',
-    // Material Design 3 적용
+    defaultTheme: getStoredTheme(),
     variations: {
       colors: ['primary', 'secondary'],
       lighten: 5,
@@ -27,18 +38,39 @@ const vuetify = createVuetify({
       light: {
         dark: false,
         colors: {
-          primary: '#009688',    // Teal
-          secondary: '#CDDC39',  // Lime
-          accent: '#CDDC39',     // Lime
-          error: '#F44336',      // Red
-          warning: '#FF9800',    // Orange
-          info: '#2196F3',       // Blue
-          success: '#4CAF50',    // Green
-          'dark-primary': '#00796B',  // Dark Teal
-          'light-primary': '#B2DFDB', // Light Teal
-          'text-primary': '#FFFFFF',  // White
-          'text-secondary': '#FFFFFF', // White
-          'divider': '#BDBDBD'        // Light Grey
+          primary: '#535C91',           // 포인트(블루그레이)
+          secondary: '#9290C3',         // 서브 포인트(연보라)
+          tertiary: '#1B1A55',          // 강조(딥 인디고)
+          background: '#F5F6FA',        // 아주 연한 회색/화이트
+          surface: '#FFFFFF',           // White surface
+          error: '#F44336',             // 기본 Vuetify Error
+          warning: '#FFC107',           // 기본 Vuetify Warning
+          info: '#2196F3',              // 기본 Vuetify Info
+          success: '#4CAF50',           // 기본 Vuetify Success
+          'text-primary': '#070F2B',    // Primary 위 텍스트(딥 네이비)
+          'text-secondary': '#9290C3',  // Secondary 위 텍스트
+          'text-tertiary': '#F5F6FA',   // Tertiary 위 텍스트
+          'text-background': '#1B1A55', // Background 위 텍스트
+          'divider': '#9290C3'          // Divider
+        }
+      },
+      dark: {
+        dark: true,
+        colors: {
+          primary: '#535C91',           // 포인트(블루그레이)
+          secondary: '#9290C3',         // 서브 포인트(연보라)
+          tertiary: '#1B1A55',          // 보조 포인트(딥 인디고)
+          background: '#070F2B',        // 딥 네이비/블랙(배경)
+          surface: '#1B1A55',           // 더 어두운 서피스
+          error: '#FF5252',             // 기본 Vuetify Error
+          warning: '#FFD740',           // 기본 Vuetify Warning
+          info: '#40C4FF',              // 기본 Vuetify Info
+          success: '#69F0AE',           // 기본 Vuetify Success
+          'text-primary': '#F5F6FA',    // Primary 위 텍스트
+          'text-secondary': '#9290C3',  // Secondary 위 텍스트
+          'text-tertiary': '#F5F6FA',   // Tertiary 위 텍스트
+          'text-background': '#F5F6FA', // Background 위 텍스트
+          'divider': '#535C91'          // Divider
         }
       }
     }

@@ -3,11 +3,11 @@
     <v-row>
       <v-col cols="12">
         <v-card class="mb-4" elevation="3" rounded="lg">
-          <v-toolbar flat color="primary" dark class="rounded-t-lg pa-3">
+          <v-toolbar flat color="primary" dark class="rounded-t-lg">
             <v-icon class="mr-2 ml-2">mdi-cash-multiple</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">펀드 관리</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn variant="elevated" color="white" class="text-primary mr-2" @click="createNewFund">
+            <v-btn variant="elevated" color="var(--text-on-primary)" class="text-primary mr-2" @click="createNewFund">
               <v-icon left>mdi-plus</v-icon>
               새 펀드 생성
             </v-btn>
@@ -19,7 +19,7 @@
                   <v-card-text class="pa-4">
                     <div class="d-flex align-center mb-2">
                       <v-avatar color="primary" size="42" class="mr-3">
-                        <v-icon color="white">mdi-chart-box</v-icon>
+                        <v-icon color="var(--text-on-primary)">mdi-chart-box</v-icon>
                       </v-avatar>
                       <div>
                         <div class="text-caption text-grey-darken-1 font-weight-medium">총 펀드 수</div>
@@ -39,8 +39,8 @@
                 <v-card elevation="2" class="rounded-lg" height="100%">
                   <v-card-text class="pa-4">
                     <div class="d-flex align-center mb-2">
-                      <v-avatar color="success" size="42" class="mr-3">
-                        <v-icon color="white">mdi-currency-krw</v-icon>
+                      <v-avatar color="tertiary" size="42" class="mr-3">
+                        <v-icon color="var(--text-on-primary)">mdi-currency-krw</v-icon>
                       </v-avatar>
                       <div>
                         <div class="text-caption text-grey-darken-1 font-weight-medium">총 투자금</div>
@@ -49,7 +49,7 @@
                     </div>
                     <v-divider class="my-3"></v-divider>
                     <div class="d-flex align-center">
-                      <v-icon color="success" size="small" class="mr-1">mdi-information</v-icon>
+                      <v-icon color="tertiary" size="small" class="mr-1">mdi-information</v-icon>
                       <span class="text-caption text-grey-darken-1">전체 펀드</span>
                     </div>
                   </v-card-text>
@@ -61,7 +61,7 @@
                   <v-card-text class="pa-4">
                     <div class="d-flex align-center mb-2">
                       <v-avatar :color="returnColor" size="42" class="mr-3">
-                        <v-icon color="white">{{ returnIcon }}</v-icon>
+                        <v-icon color="var(--text-on-primary)">{{ returnIcon }}</v-icon>
                       </v-avatar>
                       <div>
                         <div class="text-caption text-grey-darken-1 font-weight-medium">평균 수익률</div>
@@ -81,8 +81,8 @@
                 <v-card elevation="2" class="rounded-lg" height="100%">
                   <v-card-text class="pa-4">
                     <div class="d-flex align-center mb-2">
-                      <v-avatar color="info" size="42" class="mr-3">
-                        <v-icon color="white">mdi-account-group</v-icon>
+                      <v-avatar color="secondary" size="42" class="mr-3">
+                        <v-icon color="var(--text-on-primary)">mdi-account-group</v-icon>
                       </v-avatar>
                       <div>
                         <div class="text-caption text-grey-darken-1 font-weight-medium">투자자 수</div>
@@ -91,7 +91,7 @@
                     </div>
                     <v-divider class="my-3"></v-divider>
                     <div class="d-flex align-center">
-                      <v-icon color="info" size="small" class="mr-1">mdi-information</v-icon>
+                      <v-icon color="secondary" size="small" class="mr-1">mdi-information</v-icon>
                       <span class="text-caption text-grey-darken-1">활성 투자자</span>
                     </div>
                   </v-card-text>
@@ -106,12 +106,12 @@
     <v-row>
       <v-col cols="12">
         <v-card elevation="3" rounded="lg">
-          <v-toolbar flat color="primary" dark class="rounded-t-lg pa-3">
+          <v-toolbar flat color="primary" dark class="rounded-t-lg">
             <v-icon class="mr-2 ml-2">mdi-view-list</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">펀드 목록</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="mdi-magnify" label="검색" single-line hide-details dense dark
-              class="mt-3 max-width-200 mr-2" style="max-width: 200px"></v-text-field>
+              class="my-0 mr-3 max-width-200" style="max-width: 200px; height: 40px;"></v-text-field>
           </v-toolbar>
           <div class="pa-4">
             <v-sheet rounded="lg" class="pa-4 mb-4 bg-grey-lighten-4">
@@ -182,7 +182,7 @@
     <v-row class="mt-4">
       <v-col cols="12" md="6">
         <v-card elevation="3" rounded="lg">
-          <v-toolbar flat color="primary" dark class="rounded-t-lg pa-3">
+          <v-toolbar flat color="primary" dark class="rounded-t-lg">
             <v-icon class="mr-2 ml-2">mdi-chart-pie</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">펀드 분포</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -214,7 +214,7 @@
 
       <v-col cols="12" md="6">
         <v-card elevation="3" rounded="lg">
-          <v-toolbar flat color="primary" dark class="rounded-t-lg pa-3">
+          <v-toolbar flat color="primary" dark class="rounded-t-lg">
             <v-icon class="mr-2 ml-2">mdi-chart-line</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">펀드 성과 추이</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -263,7 +263,7 @@
             <!-- 기존펀드 정보 표시 -->
             <div class="d-flex align-center mb-2" v-if="selectedFund">
               <v-avatar color="primary" size="36" class="mr-3">
-                <v-icon color="white">mdi-bank</v-icon>
+                <v-icon color="var(--text-on-primary)">mdi-bank</v-icon>
               </v-avatar>
               <div>
                 <div class="text-h6 font-weight-bold">{{ selectedFund.fund_nm }}</div>
@@ -278,7 +278,7 @@
           <v-sheet v-else rounded class="pa-4 mb-6 bg-grey-lighten-4">
             <div class="d-flex align-center mb-2">
               <v-avatar color="primary" size="36" class="mr-3">
-                <v-icon color="white">mdi-plus-circle</v-icon>
+                <v-icon color="var(--text-on-primary)">mdi-plus-circle</v-icon>
               </v-avatar>
               <div>
                 <div class="text-h6 font-weight-bold">새 펀드 정보</div>
@@ -294,7 +294,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="primary" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-account-cash</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-account-cash</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">펀드명</v-list-item-title>
@@ -312,7 +312,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="indigo" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-bank</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-bank</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">금융사</v-list-item-title>
@@ -329,7 +329,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="teal" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-tag</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-tag</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">펀드목적</v-list-item-title>
@@ -354,7 +354,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="blue" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-credit-card</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-credit-card</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">계좌번호</v-list-item-title>
@@ -372,7 +372,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="deep-purple" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-chart-box-outline</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-chart-box-outline</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">투자유형</v-list-item-title>
@@ -397,7 +397,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="amber" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-calendar</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-calendar</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">생성일</v-list-item-title>
@@ -414,7 +414,7 @@
               <v-list-item density="compact" class="py-3">
                 <template v-slot:prepend>
                   <v-avatar color="blue-grey" size="32" class="mr-3">
-                    <v-icon color="white" size="small">mdi-update</v-icon>
+                    <v-icon color="var(--text-on-primary)" size="small">mdi-update</v-icon>
                   </v-avatar>
                 </template>
                 <v-list-item-title class="text-subtitle-2 font-weight-medium">최근 수정일</v-list-item-title>
@@ -1127,7 +1127,7 @@ export default defineComponent({
 <style scoped>
 .chart-placeholder {
   height: 100%;
-  background-color: #f9f9f9;
+  background-color: var(--color-background);
   border-radius: 4px;
 }
 
@@ -1145,7 +1145,7 @@ export default defineComponent({
 }
 
 .border-green {
-  border-color: #8fc7a3 !important;
+  border-color: var(--color-tertiary) !important;
 }
 
 .gap-2 {
@@ -1153,9 +1153,9 @@ export default defineComponent({
 }
 
 .btn-mingl-outline {
-  border: 1.5px solid #c2e3d1 !important;
+  border: 1.5px solid var(--color-tertiary) !important;
   border-radius: 20px !important;
-  color: #388e5c !important;
+  color: var(--color-secondary) !important;
   background-color: white !important;
   font-weight: 500;
   min-width: 90px;
@@ -1164,20 +1164,20 @@ export default defineComponent({
 }
 
 .btn-mingl-outline:hover {
-  background-color: #f0f8f4 !important;
+  background-color: var(--color-background) !important;
 }
 
 .btn-mingl-outline.active {
-  background: #137c54 !important;
+  background: var(--color-primary) !important;
   color: white !important;
-  border-color: #137c54 !important;
+  border-color: var(--color-primary) !important;
 }
 
 .fund-type-toggle {
   border: 2px solid #8fc7a3;
   border-radius: 12px;
   padding: 16px 24px;
-  background: #fff;
+  background: var(--color-background);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -1207,9 +1207,9 @@ export default defineComponent({
   min-width: 90px;
   margin: 0 8px;
   border-radius: 20px !important;
-  background: #fff !important;
-  color: #388e5c !important;
-  border: 1.5px solid #c2e3d1 !important;
+  background: var(--color-background) !important;
+  color: var(--color-secondary) !important;
+  border: 1.5px solid var(--color-tertiary) !important;
   font-weight: 500;
   transition: background 0.2s, color 0.2s;
   line-height: 32px;
@@ -1219,15 +1219,15 @@ export default defineComponent({
 }
 
 .fund-type-btn.active {
-  background: #137c54 !important;
-  color: #fff !important;
+  background: var(--color-primary) !important;
+  color: var(--text-on-primary) !important;
   border: 1.5px solid #137c54 !important;
 }
 
 
 .chart-placeholder {
   height: 100%;
-  background-color: #f9f9f9;
+  background-color: var(--color-background);
   border-radius: 4px;
 }
 </style>

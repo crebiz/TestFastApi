@@ -14,6 +14,7 @@ from backend.controller.fund_controller import router as fund_router
 # from backend.controller.kftc_controller import router as kftc_router  # 임시 비활성화
 from backend.controller.code_controller import router as code_router
 from backend.controller.card_controller import router as card_router
+from backend.controller.flow_controller import router as flow_router
 from backend.database.database import engine, Base
 
 # 환경 변수 로드
@@ -43,6 +44,7 @@ app.include_router(fund_router)
 # app.include_router(kftc_router)  # 임시 비활성화
 app.include_router(code_router)
 app.include_router(card_router)
+app.include_router(flow_router)
 
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)
