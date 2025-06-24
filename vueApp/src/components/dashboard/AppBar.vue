@@ -1,114 +1,112 @@
 <template>
-  <v-app-bar
-    app
-    color="primary"
-    dark
-    elevation="2"
-    height="64"
-    class="app-bar-fixed"
-    rounded="0"
-  >
-    <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')"></v-app-bar-nav-icon>
-    
-    <v-toolbar-title class="ml-2">{{ title }}</v-toolbar-title>
-    
-    <v-spacer></v-spacer>
-    
-    <v-btn icon>
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn>
-    
-    <v-btn icon>
-      <v-icon>mdi-bell</v-icon>
-    </v-btn>
-    
-    <!-- 로그인 상태에 따라 버튼 표시 -->
-    <v-btn
-      v-if="!isAuthenticated"
-      color="secondary"
-      class="ml-2"
-      @click="login"
-      variant="elevated"
-      rounded="pill"
-    >
-      <v-icon left>mdi-google</v-icon>
-      구글 로그인
-    </v-btn>
-    
-    <v-btn
-      v-if="isAuthenticated"
-      color="secondary"
-      class="ml-2"
-      @click="logout"
-      variant="elevated"
-      rounded="pill"
-    >
-      <v-icon left>mdi-logout</v-icon>
-      로그아웃
-    </v-btn>
-    
-    <v-menu
-      left
-      bottom
-      offset-y
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon
-          v-bind="props"
-          variant="text"
-        >
-          <v-avatar size="36">
-            <v-img
-              :src="userAvatar"
-              alt="User"
-            ></v-img>
-          </v-avatar>
-        </v-btn>
-      </template>
+  <v-app-bar app elevation="1" class="app-bar" color="primary">
+    <div class="d-flex align-center justify-space-between w-100">
+      <v-app-bar-nav-icon @click="$emit('toggle-drawer')"></v-app-bar-nav-icon>
+      <div class="search-container mx-auto">
+        <v-text-field
+          density="compact"
+          variant="solo"
+          prepend-inner-icon="mdi-magnify"
+          placeholder="Search"
+          hide-details
+          rounded="lg"
+          color="white"
+          class="search-field"
+        ></v-text-field>
+      </div>
 
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in profileItems"
-          :key="index"
-          :to="item.to"
-          link
+      <div class="d-flex align-center">
+        <v-btn icon class="mr-2">
+          <v-icon>mdi-calendar-blank-outline</v-icon>
+        </v-btn>
+        
+        <v-btn icon class="mr-2">
+          <v-icon>mdi-cog-outline</v-icon>
+        </v-btn>
+        
+        <v-btn icon class="mr-2">
+          <v-icon>mdi-bell-outline</v-icon>
+        </v-btn>
+
+        <v-btn
+          v-if="!isAuthenticated"
+          color="primary"
+          rounded="lg"
+          class="login-btn"
+          @click="login"
         >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+          Log In
+        </v-btn>
         
-        <v-divider></v-divider>
+        <v-btn
+          v-if="isAuthenticated"
+          color="secondary"
+          class="ml-2"
+          @click="logout"
+          variant="elevated"
+          rounded="pill"
+        >
+          <v-icon left>mdi-logout</v-icon>
+          로그아웃
+        </v-btn>
         
-        <v-list-item @click="logout">
-          <v-list-item-icon>
-            <v-icon>mdi-logout</v-icon>
-          </v-list-item-icon>
-          
-          <v-list-item-title>로그아웃</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+        <v-menu
+          left
+          bottom
+          offset-y
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon
+              v-bind="props"
+              variant="text"
+            >
+              <v-avatar size="36">
+                <v-img
+                  :src="userAvatar"
+                  alt="User"
+                ></v-img>
+              </v-avatar>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in profileItems"
+              :key="index"
+              :to="item.to"
+              link
+            >
+              <v-list-item-icon>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-icon>
+              
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+            
+            <v-divider></v-divider>
+            
+            <v-list-item @click="logout">
+              <v-list-item-icon>
+                <v-icon>mdi-logout</v-icon>
+              </v-list-item-icon>
+              
+              <v-list-item-title>로그아웃</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
   </v-app-bar>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'DashboardAppBar',
-  
-  props: {
-    title: {
-      type: String,
-      default: 'Dashboard'
-    }
-  },
   
   emits: ['toggle-drawer'],
   
@@ -158,36 +156,30 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.v-app-bar {
+.app-bar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
-.app-bar-fixed {
-  z-index: 5; /* Sidebar보다 높은 z-index */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+.v-btn:hover, .v-btn:focus {
+  background-color: #fff !important;
+  color: #535C91 !important; /* primary color */
 }
 
-.v-btn.v-btn--variant-elevated {
-  background-color: var(--v-theme-secondary) !important;
-  color: rgba(0, 0, 0, 0.87) !important;
+
+.search-container {
+  max-width: 400px;
+  width: 100%;
+}
+
+.search-field {
+  max-width: 400px;
+}
+
+.login-btn {
+  background-color: var(--color-secondary) !important;
+  color: white;
   font-weight: 500;
-  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12);
-}
-
-.v-toolbar-title {
-  font-weight: 500;
-  letter-spacing: 0.0125em;
-}
-
-/* Material Design 3 스타일 */
-.v-btn--icon {
-  border-radius: 50%;
-  min-width: 36px;
-  width: 36px;
-  height: 36px;
-  margin: 0 4px;
+  padding: 0 20px;
 }
 </style>

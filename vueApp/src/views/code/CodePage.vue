@@ -5,7 +5,7 @@
       <v-col cols="12">
         <v-card elevation="3" rounded="lg" class="mb-4">
           <v-toolbar flat color="primary" dark class="rounded-t-lg">
-            <v-icon class="me-2">mdi-code-brackets</v-icon>
+            <v-icon class="mr-2 ml-2">mdi-code-brackets</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">그룹코드 관리</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon @click="openParentDrawer(null, 'add')">
@@ -55,7 +55,7 @@
       <v-col cols="12">
         <v-card elevation="3" rounded="lg">
           <v-toolbar flat color="secondary" dark class="rounded-t-lg">
-            <v-icon class="me-2">mdi-code-array</v-icon>
+            <v-icon class="mr-2 ml-2">mdi-code-array</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">
               상세코드 관리
               <span v-if="selectedParentCode" class="text-subtitle-2 ms-2">
@@ -141,7 +141,7 @@
                 <!-- 코드명 -->
                 <v-list-item density="compact" class="py-3">
                   <template v-slot:prepend>
-                    <v-avatar color="teal" size="32" class="mr-3">
+                    <v-avatar color="tertiary" size="32" class="mr-3">
                       <v-icon color="white" size="small">mdi-tag</v-icon>
                     </v-avatar>
                   </template>
@@ -180,7 +180,7 @@
 
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn variant="text" color="grey" @click="parentDialog = false">취소</v-btn>
+              <v-btn variant="text" color="tertiary" @click="parentDialog = false">취소</v-btn>
               <v-btn color="primary" variant="elevated" @click="saveParentCode">
                 <v-icon left>mdi-content-save</v-icon>
                 저장
@@ -247,7 +247,7 @@
                 <!-- 코드명 -->
                 <v-list-item density="compact" class="py-3">
                   <template v-slot:prepend>
-                    <v-avatar color="teal" size="32" class="mr-3">
+                    <v-avatar color="tertiary" size="32" class="mr-3">
                       <v-icon color="white" size="small">mdi-tag</v-icon>
                     </v-avatar>
                   </template>
@@ -263,7 +263,7 @@
                 <!-- 값(Value) -->
                 <v-list-item density="compact" class="py-3">
                   <template v-slot:prepend>
-                    <v-avatar color="blue" size="32" class="mr-3">
+                    <v-avatar color="secondary" size="32" class="mr-3">
                       <v-icon color="white" size="small">mdi-key-variant</v-icon>
                     </v-avatar>
                   </template>
@@ -279,7 +279,7 @@
                 <!-- 아이콘 -->
                 <v-list-item density="compact" class="py-3">
                   <template v-slot:prepend>
-                    <v-avatar color="indigo" size="32" class="mr-3">
+                    <v-avatar color="tertiary" size="32" class="mr-3">
                       <v-icon color="white" size="small">mdi-emoticon-outline</v-icon>
                     </v-avatar>
                   </template>
@@ -295,7 +295,7 @@
                 <!-- 정렬 순서 -->
                 <v-list-item density="compact" class="py-3">
                   <template v-slot:prepend>
-                    <v-avatar color="deep-purple" size="32" class="mr-3">
+                    <v-avatar color="secondary" size="32" class="mr-3">
                       <v-icon color="white" size="small">mdi-sort-numeric-ascending</v-icon>
                     </v-avatar>
                   </template>
@@ -333,7 +333,7 @@
           </v-form>
           <v-card-actions class="pa-4">
             <v-spacer></v-spacer>
-            <v-btn variant="text" color="grey" @click="childDialog = false">취소</v-btn>
+            <v-btn variant="text" color="tertiary" @click="childDialog = false">취소</v-btn>
             <v-btn color="primary" variant="elevated" @click="saveChildCode">
               <v-icon left>mdi-content-save</v-icon>
               저장
@@ -363,7 +363,7 @@
         </v-card-text>
         <v-card-actions class="pa-4 pt-0">
           <v-spacer></v-spacer>
-          <v-btn variant="text" color="grey" @click="confirmDialog = false">취소</v-btn>
+          <v-btn variant="text" color="tertiary" @click="confirmDialog = false">취소</v-btn>
           <v-btn color="error" variant="elevated" @click="confirmAction()">
             <v-icon left>mdi-delete</v-icon>
             삭제

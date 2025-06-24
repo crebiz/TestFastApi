@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 import { decodeCredential } from 'vue3-google-login'
 import { useRouter } from 'vue-router'

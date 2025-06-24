@@ -8,7 +8,7 @@
               <v-img :src="userAvatar" alt="User"></v-img>
             </v-avatar>
             <h2 class="text-h5 mb-1">{{ userName }}</h2>
-            <p class="text-subtitle-1 text-grey">{{ userEmail }}</p>
+            <p class="text-subtitle-1 text-grey-darken-1 mb-0">{{ userEmail }}</p>
             <v-divider class="my-4 w-100"></v-divider>
           </v-card-text>
         </v-card>
@@ -16,9 +16,9 @@
 
       <v-col cols="12" md="8">
         <v-card class="h-100" elevation="3" rounded="lg">
-          <v-toolbar flat color="primary" dark class="rounded-t-lg pa-3">
-            <v-icon class="mr-2 ml-2">mdi-information</v-icon>
-            <v-toolbar-title class="text-h6 font-weight-medium">계정 정보</v-toolbar-title>
+          <v-toolbar flat color="primary" class="rounded-t-lg" style="background-color: var(--color-primary) !important;">
+            <v-icon class="mr-2 ml-2" color="white">mdi-information</v-icon>
+            <v-toolbar-title class="text-h6 font-weight-medium" style="color: var(--text-on-primary);">계정 정보</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <div class="info-grid">
@@ -130,16 +130,12 @@ export default defineComponent({
 
 .v-list-item-title {
   font-weight: 500;
-  color: var(--v-theme-primary);
 }
 
 .v-list-item-subtitle {
-  color: rgba(0, 0, 0, 0.6);
 }
 
 .v-btn.v-btn--variant-elevated {
-  background-color: var(--v-theme-secondary) !important;
-  color: rgba(0, 0, 0, 0.87) !important;
   font-weight: 500;
 }
 
@@ -162,13 +158,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   padding: 12px;
-  border-radius: 12px;
-  background-color: rgba(0, 150, 136, 0.05);
-  transition: background-color 0.2s ease;
-}
-
-.info-item:hover {
-  background-color: rgba(0, 150, 136, 0.1);
 }
 
 .info-icon {
@@ -179,7 +168,6 @@ export default defineComponent({
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgba(0, 150, 136, 0.1);
 }
 
 .info-content {
@@ -191,11 +179,10 @@ export default defineComponent({
 
 .info-title {
   font-weight: 500;
-  color: var(--v-theme-primary);
 }
 
 .info-value {
-  color: rgba(0, 0, 0, 0.6);
   font-weight: 400;
 }
+
 </style>

@@ -4,7 +4,7 @@
       <v-col cols="12">
         <v-card elevation="3" rounded="lg" class="mb-4">
           <v-toolbar flat color="primary" dark class="rounded-t-lg">
-            <v-icon class="me-2">mdi-card-bulleted</v-icon>
+            <v-icon class="mr-2 ml-2">mdi-card-bulleted</v-icon>
             <v-toolbar-title class="text-h6 font-weight-medium">카드사용내역 조회</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
@@ -69,7 +69,7 @@
           <v-card-text class="pa-4">
             <div class="d-flex align-center mb-2">
               <v-avatar :color="getCardColorSync(selectedCardCompany)" size="42" class="mr-3">
-                <v-icon color="white">mdi-currency-krw</v-icon>
+                <v-icon color="var(--text-on-primary)">mdi-currency-krw</v-icon>
               </v-avatar>
               <div>
                 <div class="text-caption text-grey-darken-1 font-weight-medium">총 사용금액</div>
@@ -89,8 +89,8 @@
         <v-card elevation="2" class="rounded-lg" height="100%">
           <v-card-text class="pa-4">
             <div class="d-flex align-center mb-2">
-              <v-avatar color="info" size="42" class="mr-3">
-                <v-icon color="white">mdi-receipt</v-icon>
+              <v-avatar color="secondary" size="42" class="mr-3">
+                <v-icon color="var(--text-on-primary)">mdi-receipt</v-icon>
               </v-avatar>
               <div>
                 <div class="text-caption text-grey-darken-1 font-weight-medium">총 사용건수</div>
@@ -99,7 +99,7 @@
             </div>
             <v-divider class="my-3"></v-divider>
             <div class="d-flex align-center">
-              <v-icon color="info" size="small" class="mr-1">mdi-information</v-icon>
+              <v-icon color="secondary" size="small" class="mr-1">mdi-information</v-icon>
               <span class="text-caption text-grey-darken-1">{{ selectedCardCompany || '전체' }} 카드 거래수</span>
             </div>
           </v-card-text>
@@ -110,8 +110,8 @@
         <v-card elevation="2" class="rounded-lg" height="100%">
           <v-card-text class="pa-4">
             <div class="d-flex align-center mb-2">
-              <v-avatar color="success" size="42" class="mr-3">
-                <v-icon color="white">mdi-store</v-icon>
+              <v-avatar color="tertiary" size="42" class="mr-3">
+                <v-icon color="var(--text-on-primary)">mdi-store</v-icon>
               </v-avatar>
               <div>
                 <div class="text-caption text-grey-darken-1 font-weight-medium">최대 사용금액 가맹점</div>
@@ -122,7 +122,7 @@
             </div>
             <v-divider class="my-3"></v-divider>
             <div class="d-flex align-center">
-              <v-icon color="success" size="small" class="mr-1">mdi-information</v-icon>
+              <v-icon color="tertiary" size="small" class="mr-1">mdi-information</v-icon>
               <span class="text-caption text-grey-darken-1">최대 지출 가맹점</span>
             </div>
           </v-card-text>
@@ -133,8 +133,8 @@
         <v-card elevation="2" class="rounded-lg" height="100%">
           <v-card-text class="pa-4">
             <div class="d-flex align-center mb-2">
-              <v-avatar color="warning" size="42" class="mr-3">
-                <v-icon color="white">mdi-store-check</v-icon>
+              <v-avatar color="secondary" size="42" class="mr-3">
+                <v-icon color="var(--text-on-primary)">mdi-store-check</v-icon>
               </v-avatar>
               <div>
                 <div class="text-caption text-grey-darken-1 font-weight-medium">최다 방문 가맹점</div>
@@ -145,7 +145,7 @@
             </div>
             <v-divider class="my-3"></v-divider>
             <div class="d-flex align-center">
-              <v-icon color="warning" size="small" class="mr-1">mdi-information</v-icon>
+              <v-icon color="secondary" size="small" class="mr-1">mdi-information</v-icon>
               <span class="text-caption text-grey-darken-1">가장 자주 방문한 가맹점</span>
             </div>
           </v-card-text>
@@ -175,10 +175,10 @@
       <v-col cols="12">
         <v-expansion-panels v-model="tableExpanded">
           <v-expansion-panel>
-            <v-expansion-panel-title>
+            <v-expansion-panel-title color="secondary" dark class="rounded-t-lg" style="min-height: 64px; height: 64px;">
               <v-card-item>
                 <div class="d-flex align-center w-100">
-                  <v-icon :color="getCardColorSync(selectedCardCompany)" class="mr-2">mdi-credit-card</v-icon>
+                  <v-icon class="mr-2">mdi-credit-card</v-icon>
                   <div>
                     <span class="text-h6 font-weight-medium">{{ selectedCardCompany || '카드사' }} 사용내역</span>
                     <span v-if="cardTransactions.length > 0" class="text-subtitle-2 ms-2">(총 {{ cardTransactions.length
@@ -519,15 +519,15 @@ const initMonthlyChart = () => {
   if (chartColor === 'primary') {
     lineColor = '#1976D2';
   } else if (chartColor === 'error' || chartColor === 'red-darken-1') {
-    lineColor = '#D32F2F';
+    lineColor = 'var(--color-error)';
   } else if (chartColor === 'blue-darken-1') {
-    lineColor = '#1976D2';
+    lineColor = 'var(--color-blue)';
   } else if (chartColor === 'green-darken-1') {
-    lineColor = '#388E3C';
+    lineColor = 'var(--color-green)';
   } else if (chartColor === 'orange-darken-1') {
-    lineColor = '#F57C00';
+    lineColor = 'var(--color-orange)';
   } else if (chartColor === 'purple-darken-1') {
-    lineColor = '#8E24AA';
+    lineColor = 'var(--color-purple)';
   }
 
   // 차트 생성
@@ -649,16 +649,16 @@ const categoryChartData = computed(() => {
     datasets: [
       {
         label: '금액(만원)',
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'var(--color-background)',
+        borderColor: 'var(--color-primary)',
         borderWidth: 1,
         data: amountData.map(amount => Math.round(amount / 10000)), // 만원 단위로 변환
         yAxisID: 'y'
       },
       {
         label: '건수',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'var(--color-background)',
+        borderColor: 'var(--color-error)',
         borderWidth: 1,
         data: countData,
         yAxisID: 'y1'
@@ -678,16 +678,16 @@ const cardCompanyChartData = computed(() => {
     datasets: [
       {
         label: '금액(만원)',
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'var(--color-background)',
+        borderColor: 'var(--color-blue)',
         borderWidth: 1,
         data: amountData.map(amount => Math.round(amount / 10000)), // 만원 단위로 변환
         yAxisID: 'y'
       },
       {
         label: '건수',
-        backgroundColor: 'rgba(153, 102, 255, 0.5)',
-        borderColor: 'rgba(153, 102, 255, 1)',
+        backgroundColor: 'var(--color-background)',
+        borderColor: 'var(--color-purple)',
         borderWidth: 1,
         data: countData,
         yAxisID: 'y1'
