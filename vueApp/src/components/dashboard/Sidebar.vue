@@ -71,19 +71,12 @@ export default defineComponent({
     const items = [
       { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard', exact: true },
       { title: 'Login Info', icon: 'mdi-account', to: '/dashboard/profile', exact: false },
-<<<<<<< HEAD
-      { title: 'Budget', icon: 'mdi-cash-multiple', to: '/dashboard/budget', exact: false },
-=======
       { title: 'Budget', icon: 'mdi-scale-balance', to: '/dashboard/budget', exact: false },
->>>>>>> c7bee69ad96db3a7eb28a89c4e48ece255b7218e
       { title: 'Fund', icon: 'mdi-cash-multiple', to: '/dashboard/fund', exact: false },
       { title: 'Card', icon: 'mdi-card-bulleted', to: '/dashboard/card', exact: false },
       { title: 'Code', icon: 'mdi-code-brackets', to: '/dashboard/code', exact: false },
       { title: 'Flow', icon: 'mdi-graph-outline', to: '/dashboard/flow', exact: false },
-<<<<<<< HEAD
       { title: 'Tab', icon: 'mdi-tab', to: '/dashboard/tab', exact: false },
-=======
->>>>>>> c7bee69ad96db3a7eb28a89c4e48ece255b7218e
     ];
 
     return {
