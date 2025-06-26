@@ -9,6 +9,7 @@ import CardPage from '../views/card/CardPage.vue'
 import FlowPage from '../views/flow/FlowPage.vue'
 import TabPage from '../views/tab/TabPage.vue'
 import BudgetPage from '../views/budget/BudgetPage.vue'
+import ComponentsPage from '../views/components/ComponentsPage.vue'
 
 // 스토어 가져오기
 import { useAuthStore } from '../stores/authStore'
@@ -63,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'code',
         name: 'code',
         component: CodePage
+      },
+      {
+        path: 'components',
+        name: 'components',
+        component: ComponentsPage
       }
     ]
   }

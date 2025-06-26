@@ -41,6 +41,10 @@
             <v-divider class="my-4"></v-divider>
             <v-row class="px-4 pb-4">
               <v-col cols="12" class="d-flex justify-end">
+                <v-btn color="info" variant="outlined" class="mr-2" @click="popupTest">
+                  <v-icon start>mdi-download</v-icon>
+                  팝업테스트
+                </v-btn>
                 <v-btn color="info" variant="outlined" class="mr-2" @click="loadTempData">
                   <v-icon start>mdi-download</v-icon>
                   불러오기
@@ -139,6 +143,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- 기본정보 미리보기 다이얼로그 -->
+    <BasicInfoPreviewDialog
+      v-model="showPopupTestDialog"
+      :data="testData"
+      @confirm="handlePopupConfirm"
+      @cancel="handlePopupCancel"
+    />
   </div>
 </template>
 
@@ -149,6 +161,7 @@ import { useRouter } from 'vue-router';
 import BasicInfoTab from '@/components/tabs/BasicInfoTab.vue';
 import StatusTab from '@/components/tabs/StatusTab.vue';
 import AiTab from '@/components/tabs/AiTab.vue';
+import BasicInfoPreviewDialog from '@/components/dialogs/BasicInfoPreviewDialog.vue';
 import { useTabDataStore } from '@/stores/tabData';
 
 // === 반응형 상태 변수들 ===
@@ -174,6 +187,9 @@ const showMenuConfirmDialog = ref(false);
 /** 라우터 이동 확인 다이얼로그의 표시 여부를 제어하는 반응형 변수 */
 const showRouterConfirmDialog = ref(false);
 
+/** 팝업 테스트 다이얼로그의 표시 여부를 제어하는 반응형 변수 */
+const showPopupTestDialog = ref(false);
+
 /** 탭 변경 시 이동하려는 대상 탭을 임시 저장하는 변수 */
 const pendingTab = ref('');
 
@@ -185,6 +201,15 @@ const tabDataStore = useTabDataStore();
 
 /** Vue Router 인스턴스 */
 const router = useRouter();
+
+/** 팝업 테스트 데이터 */
+const testData = ref({
+  name: '김이름',
+  email: 'test@naver.com',
+  phone: '010-2222-3333',
+  department: '개발팀',
+  introduction: '소개했음'
+});
 
 /**
  * Vue Router의 라우트 떠나기 전 네비게이션 가드
@@ -494,5 +519,38 @@ const proceedRouterNavigation = () => {
   
   // CodePage로 라우터 이동
   router.push('/dashboard/code');
+};
+
+/**
+ * 팝업 테스트 다이얼로그를 표시하는 함수
+ * 
+ * '팝업 테스트' 버튼 클릭 시 호출됨
+ * 팝업 테스트 다이얼로그를 표시
+ */
+const popupTest = () => {
+  showPopupTestDialog.value = true;
+};
+
+/**
+ * 팝업 테스트 확인 버튼 클릭 시 호출되는 함수
+ * 
+ * BasicInfoPreviewDialog 컴포넌트에서 확인 버튼 클릭 시 emit된 이벤트를 처리
+ * 전달받은 데이터를 기본정보 탭에 적용
+ * 
+ * @param {object} data - 팝업에서 전달받은 기본정보 데이터
+ */
+const handlePopupConfirm = (data: any) => {
+  console.log('팝업 테스트 데이터 적용:', data);
+  basicInfoRef.value?.setData(data);
+};
+
+/**
+ * 팝업 테스트 취소 버튼 클릭 시 호출되는 함수
+ * 
+ * BasicInfoPreviewDialog 컴포넌트에서 취소 버튼 클릭 시 emit된 이벤트를 처리
+ * 특별한 처리 없이 다이얼로그가 닫힘
+ */
+const handlePopupCancel = () => {
+  console.log('팝업 테스트 취소됨');
 };
 </script>

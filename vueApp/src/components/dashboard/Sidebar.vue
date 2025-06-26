@@ -77,6 +77,7 @@ export default defineComponent({
       { title: 'Code', icon: 'mdi-code-brackets', to: '/dashboard/code', exact: false },
       { title: 'Flow', icon: 'mdi-graph-outline', to: '/dashboard/flow', exact: false },
       { title: 'Tab', icon: 'mdi-tab', to: '/dashboard/tab', exact: false },
+      { title: 'Components', icon: 'mdi-puzzle', to: '/dashboard/components', exact: false },
     ];
 
     return {
