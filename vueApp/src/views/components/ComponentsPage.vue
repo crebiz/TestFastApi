@@ -26,7 +26,7 @@
                       </p>
                       
                       <v-row>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                           <v-btn 
                             color="primary" 
                             size="large" 
@@ -39,7 +39,20 @@
                           </v-btn>
                         </v-col>
                         
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
+                          <v-btn 
+                            color="info" 
+                            size="large" 
+                            variant="flat"
+                            @click="openChildCopyDialog"
+                            prepend-icon="mdi-content-copy"
+                            block
+                          >
+                            자녀 팝업 - 복사 기능
+                          </v-btn>
+                        </v-col>
+                        
+                        <v-col cols="12" md="4">
                           <v-btn 
                             color="secondary" 
                             size="large" 
@@ -263,12 +276,29 @@
       @confirm="handleDataReceived"
       @cancel="handleDialogCancel"
     />
+    
+    <!-- 자녀 팝업 - 복사 다이얼로그 -->
+    <ChildCopyDialog
+      v-model="showChildCopyDialog"
+      @copy-result="handleCopyResult"
+      @cancel="handleChildDialogCancel"
+    />
+    
+    <!-- 손자 팝업 - 복사 결과 다이얼로그 -->
+    <CopyResultDialog
+      v-model="showCopyResultDialog"
+      :result="copyResult"
+      @close="handleResultDialogClose"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import DataInputDialog from '@/components/dialogs/DataInputDialog.vue';
+import ChildCopyDialog from '@/components/dialogs/ChildCopyDialog.vue';
+import CopyResultDialog from '@/components/dialogs/CopyResultDialog.vue';
+import type { CopyResult } from '@/components/dialogs/ChildCopyDialog.vue';
 
 /**
  * 받은 데이터 타입 정의
@@ -288,6 +318,9 @@ interface ReceivedData {
 // === 반응형 상태 ===
 const showDataInputDialog = ref(false);
 const receivedData = ref<ReceivedData | null>(null);
+const showChildCopyDialog = ref(false);
+const showCopyResultDialog = ref(false);
+const copyResult = ref<CopyResult | null>(null);
 
 // === 계산된 속성 ===
 const hasReceivedData = computed(() => receivedData.value !== null);
@@ -332,6 +365,46 @@ const handleDialogCancel = () => {
 const clearReceivedData = () => {
   receivedData.value = null;
   console.log('받은 데이터가 초기화되었습니다.');
+};
+
+/**
+ * 자녀 복사 다이얼로그 열기
+ */
+const openChildCopyDialog = () => {
+  showChildCopyDialog.value = true;
+};
+
+/**
+ * 자녀 다이얼로그 취소 처리
+ */
+const handleChildDialogCancel = () => {
+  console.log('자녀 복사 다이얼로그가 취소되었습니다.');
+  showChildCopyDialog.value = false;
+};
+
+/**
+ * 복사 결과 처리 (자녀 팝업에서 전달받음)
+ */
+const handleCopyResult = (result: CopyResult) => {
+  console.log('복사 결과를 받았습니다:', result);
+  
+  // 복사 결과를 저장
+  copyResult.value = result;
+  
+  // 자녀 다이얼로그 닫기
+  showChildCopyDialog.value = false;
+  
+  // 손자 다이얼로그 열기
+  showCopyResultDialog.value = true;
+};
+
+/**
+ * 결과 다이얼로그 닫기 처리
+ */
+const handleResultDialogClose = () => {
+  console.log('결과 다이얼로그가 닫혔습니다.');
+  showCopyResultDialog.value = false;
+  copyResult.value = null;
 };
 
 /**
